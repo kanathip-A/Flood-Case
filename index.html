@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="_ds/organic-416449ab-53f2-495f-84cc-b042f5553b3c/styles.css">
+<script src="_ds/organic-416449ab-53f2-495f-84cc-b042f5553b3c/_ds_bundle.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="config.js"></script>
+<style>
+:root{--font-heading:"TH Sarabun New","Sarabun",sans-serif;--font-heading-weight:700;--font-body:"TH Sarabun New","Sarabun",sans-serif}
+body{margin:0;background:var(--color-bg);font-family:var(--font-body);font-size:25px;line-height:1.5;color:var(--color-text)}
+body *{font-family:var(--font-body)!important}
+h2{font-size:44px;line-height:1.15}
+.field>label{font-size:22px!important;font-weight:600}.tag{font-size:20px!important}.btn{font-size:24px!important}.input{font-size:24px!important}
+a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
+.leaflet-tooltip{font-size:20px;border-radius:10px;border:0;box-shadow:var(--shadow-md)}
+.leaflet-popup-content-wrapper{border-radius:20px}.leaflet-popup-content{margin:12px 14px;font-size:18px;line-height:1.35}
+@media print{
+  @page{size:A4;margin:10mm}
+  body{background:#fff;font-size:19px}
+  [data-noprint]{display:none!important}
+  [data-print-doc]{box-shadow:none!important;max-width:none!important;width:auto!important;margin:0!important;padding:0!important;border-radius:0!important;background:#fff!important}
+  [data-print-doc] figure,[data-print-doc] section{break-inside:avoid}
+  .leaflet-control-zoom{display:none}
+}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;flex-direction:column">
+  <header data-noprint="1" style="display:flex;align-items:center;gap:14px;padding:20px 20px 12px;max-width:1200px;width:100%;margin:0 auto;box-sizing:border-box">
+    <div style="width:46px;height:46px;border-radius:50%;background:var(--color-accent-2-300);flex:none"></div>
+    <div style="flex:1;min-width:0">
+      <div style="font-weight:700;font-size:clamp(26px,6.5vw,30px);line-height:1.15;text-wrap:balance">รวบรวมหลักฐานพนักงานประสบภัยน้ำท่วม</div>
+      <div style="font-size:21px;color:var(--color-neutral-700)">{{ subtitle }}</div>
+    </div>
+    <sc-if value="{{ isAmIn }}"><button class="btn btn-ghost" onClick="{{ logout }}">ออกจากระบบ</button></sc-if>
+  </header>
+
+  <sc-if value="{{ showTabs }}" hint-placeholder-val="{{ true }}">
+    <nav data-noprint="1" style="width:100%;max-width:640px;margin:0 auto;padding:0 20px 8px;box-sizing:border-box">
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;background:var(--color-surface);border-radius:999px;padding:6px">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3"><button type="button" onClick="{{ t.go }}" style="border:0;cursor:pointer;border-radius:999px;padding:8px 4px;font-size:21px;font-weight:600;line-height:1.2;min-height:48px;background:{{ t.bg }};color:{{ t.fg }}">{{ t.label }}</button></sc-for>
+      </div>
+    </nav>
+  </sc-if>
+
+  <sc-if value="{{ noGas }}">
+    <div data-noprint="1" style="max-width:1200px;width:100%;margin:0 auto;padding:0 20px 8px;box-sizing:border-box">
+      <div style="background:var(--color-accent-100);color:var(--color-accent-900);border-radius:var(--radius-lg);padding:14px 20px;font-size:22px">ยังไม่ได้เชื่อมต่อ Google Apps Script — ใส่ URL ของ Web App ในไฟล์ config.js ก่อนส่งลิงก์ให้พนักงาน</div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ zipBar }}">
+    <div data-noprint="1" style="max-width:1200px;width:100%;margin:0 auto;padding:0 20px 8px;box-sizing:border-box">
+      <div style="background:var(--color-accent-2-100);color:var(--color-accent-2-900);border-radius:var(--radius-lg);padding:14px 20px;font-size:22px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <span style="flex:1;min-width:220px;text-wrap:pretty">{{ zipBar.text }}</span>
+        <sc-if value="{{ zipBar.url }}"><a class="btn btn-primary" href="{{ zipBar.url }}" download="{{ zipBar.name }}" style="text-decoration:none">ดาวน์โหลด ZIP</a></sc-if>
+        <button class="btn btn-ghost" onClick="{{ closeZip }}" aria-label="ปิด">ปิด</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showForm }}" hint-placeholder-val="{{ true }}">
+    <main style="width:100%;max-width:640px;margin:0 auto;padding:12px 20px 80px;box-sizing:border-box;display:flex;flex-direction:column;gap:24px">
+      <sc-if value="{{ inLine }}">
+        <div style="background:var(--color-accent-100);border-radius:var(--radius-lg);padding:16px 20px;display:flex;flex-direction:column;gap:10px">
+          <span style="font-size:22px;color:var(--color-accent-900);text-wrap:pretty">คุณเปิดลิงก์จากในแอป LINE ซึ่งอาจใช้ตำแหน่งและกล้องได้ไม่เต็มที่ แนะนำให้เปิดในเบราว์เซอร์ของโทรศัพท์</span>
+          <a class="btn btn-primary" href="{{ extUrl }}" style="align-self:flex-start;text-decoration:none">เปิดในเบราว์เซอร์</a>
+        </div>
+      </sc-if>
+      <p style="margin:0;font-size:24px;text-wrap:pretty">ส่งรูปหลักฐานทุกวันที่มาทำงานไม่ได้เพราะน้ำท่วม เพื่อประกอบการขอความช่วยเหลือจากฝ่ายบุคคล รูปต้องแสดงให้เห็นชัดว่าได้รับความเดือดร้อนจริง เช่น รูปตัวเองคู่กับบ้านพักที่น้ำท่วม</p>
+      <sc-if value="{{ sentInfo }}">
+        <div style="background:var(--color-accent-2-100);color:var(--color-accent-2-900);border-radius:var(--radius-lg);padding:16px 20px;font-size:22px;text-wrap:pretty">{{ sentInfo }}</div>
+      </sc-if>
+
+      <section style="background:var(--color-surface);border-radius:var(--radius-lg);padding:clamp(18px,5vw,24px);display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:40px;height:40px;border-radius:50%;background:var(--color-accent);color:#fff;display:grid;place-items:center;font-weight:700;flex:none">1</span><h3 style="margin:0;font-size:32px">ข้อมูลพนักงาน</h3></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+          <div class="field"><label>รหัสพนักงาน *</label><input class="input" value="{{ f.emp_id }}" onChange="{{ on.emp_id }}" onBlur="{{ syncSentNow }}" autocomplete="off">
+            <sc-if value="{{ err.emp_id }}"><div style="color:var(--color-accent-800);font-size:21px">{{ err.emp_id }}</div></sc-if></div>
+          <div class="field"><label>เบอร์โทร *</label><input class="input" type="tel" inputmode="tel" value="{{ f.phone }}" onChange="{{ on.phone }}" onBlur="{{ syncSentNow }}">
+            <sc-if value="{{ err.phone }}"><div style="color:var(--color-accent-800);font-size:21px">{{ err.phone }}</div></sc-if></div>
+        </div>
+        <div class="field"><label>ชื่อ-นามสกุล *</label><input class="input" value="{{ f.name }}" onChange="{{ on.name }}">
+          <sc-if value="{{ err.name }}"><div style="color:var(--color-accent-800);font-size:21px">{{ err.name }}</div></sc-if></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+          <div class="field"><label>ตำแหน่ง</label><input class="input" value="{{ f.position }}" onChange="{{ on.position }}"></div>
+          <div class="field"><label>สาขา *</label>
+            <select class="input" value="{{ f.branch }}" onChange="{{ on.branch }}">
+              <option value="">เลือกสาขา</option>
+              <sc-for list="{{ branches }}" as="b" hint-placeholder-count="9"><option value="{{ b.code }}">{{ b.name }}</option></sc-for>
+            </select>
+            <sc-if value="{{ err.branch }}"><div style="color:var(--color-accent-800);font-size:21px">{{ err.branch }}</div></sc-if></div>
+        </div>
+      </section>
+
+      <section style="background:var(--color-surface);border-radius:var(--radius-lg);padding:clamp(18px,5vw,24px);display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:40px;height:40px;border-radius:50%;background:var(--color-accent);color:#fff;display:grid;place-items:center;font-weight:700;flex:none">2</span><h3 style="margin:0;font-size:32px">บ้านพักที่น้ำท่วม</h3></div>
+        <div class="field"><label>ที่อยู่ (บ้านเลขที่ ซอย ตำบล อำเภอ จังหวัด) *</label><textarea class="input" rows="2" value="{{ f.address }}" onChange="{{ on.address }}" style="border-radius:24px;resize:vertical"></textarea>
+          <sc-if value="{{ err.address }}"><div style="color:var(--color-accent-800);font-size:21px">{{ err.address }}</div></sc-if></div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="font-size:22px;font-weight:600">ตำแหน่งบ้านบนแผนที่ *</div>
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <button type="button" class="btn btn-secondary" onClick="{{ useGps }}">{{ gpsBtn }}</button>
+            <span style="font-size:21px;color:var(--color-neutral-700);flex:1;min-width:200px">ถ้าตอนนี้ไม่ได้อยู่ที่บ้าน ให้เปิดแผนที่แล้วปักหมุดบ้านแทน</span>
+          </div>
+          <button type="button" class="btn btn-ghost" onClick="{{ openMap }}" style="align-self:flex-start">{{ mapBtn }}</button>
+          <div style="font-size:21px;color:var(--color-neutral-800)">{{ locText }}</div>
+          <sc-if value="{{ gpsErr }}"><div style="color:var(--color-accent-800);font-size:21px">{{ gpsErr }}</div></sc-if>
+          <sc-if value="{{ gpsHelp }}"><div style="background:var(--color-accent-2-100);color:var(--color-accent-2-900);border-radius:16px;padding:10px 14px;font-size:20px;text-wrap:pretty">{{ gpsHelp }}</div></sc-if>
+          <sc-if value="{{ err.loc }}"><div style="color:var(--color-accent-800);font-size:21px">{{ err.loc }}</div></sc-if>
+        </div>
+      </section>
+
+      <section style="background:var(--color-surface);border-radius:var(--radius-lg);padding:clamp(18px,5vw,24px);display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:40px;height:40px;border-radius:50%;background:var(--color-accent);color:#fff;display:grid;place-items:center;font-weight:700;flex:none">3</span><h3 style="margin:0;font-size:32px">วันที่ของหลักฐาน</h3></div>
+        <div style="font-size:21px;color:var(--color-neutral-700);text-wrap:pretty">ส่งทีละวัน ทุกวันที่มาทำงานไม่ได้ต้องมีรูปหลักฐานของวันนั้น เลือกวันย้อนหลังได้</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px">
+          <sc-for list="{{ dayChips }}" as="c" hint-placeholder-count="7">
+            <button type="button" onClick="{{ c.pick }}" style="border-radius:16px;padding:6px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.2;border:2px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }}">
+              <span style="font-size:19px">{{ c.top }}</span><strong style="font-size:28px">{{ c.mid }}</strong><span style="font-size:18px">{{ c.bot }}</span>
+            </button>
+          </sc-for>
+        </div>
+        <div class="field"><label>หรือเลือกวันที่เก่ากว่านี้</label><input class="input" type="date" max="{{ today }}" value="{{ f.day }}" onChange="{{ on.day }}">
+          <sc-if value="{{ err.day }}"><div style="color:var(--color-accent-800);font-size:21px">{{ err.day }}</div></sc-if></div>
+        <sc-if value="{{ dayText }}"><div style="font-size:26px;font-weight:700;color:var(--color-accent-800);line-height:1.3">{{ dayText }}</div></sc-if>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="font-size:22px;font-weight:600">ระดับน้ำที่บ้านวันนั้น</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <sc-for list="{{ levels }}" as="lv" hint-placeholder-count="5"><button type="button" onClick="{{ lv.pick }}" style="border-radius:999px;padding:6px 20px;font-size:23px;cursor:pointer;border:2px solid {{ lv.bd }};background:{{ lv.bg }};color:{{ lv.fg }}">{{ lv.label }}</button></sc-for>
+          </div>
+        </div>
+        <div class="field"><label>สาเหตุที่มาทำงานไม่ได้ / ความเสียหาย</label><textarea class="input" rows="3" value="{{ f.note }}" onChange="{{ on.note }}" placeholder="เช่น ถนนเข้าหมู่บ้านถูกตัดขาด ไม่มีรถโดยสาร" style="border-radius:24px;resize:vertical"></textarea></div>
+      </section>
+
+      <section style="background:var(--color-surface);border-radius:var(--radius-lg);padding:clamp(18px,5vw,24px);display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:40px;height:40px;border-radius:50%;background:var(--color-accent);color:#fff;display:grid;place-items:center;font-weight:700;flex:none">4</span><h3 style="margin:0;font-size:32px">รูปหลักฐาน</h3></div>
+        <div style="font-size:21px;color:var(--color-neutral-700);text-wrap:pretty">ใช้รูปที่ถ่ายในวันที่เลือก ถ้าวันในรูปไม่ตรงกับวันที่เลือก ระบบจะขึ้นป้ายเตือนสีส้ม ระบบจะประทับวันเวลาที่ถ่ายจริงจากข้อมูลในรูป ตำแหน่งบ้าน และชื่อของคุณลงบนรูปให้อัตโนมัติ ถ้ารูปไม่มีข้อมูลเวลา จะประทับว่า “ไม่ทราบเวลาถ่าย”</div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <sc-for list="{{ slots }}" as="s" hint-placeholder-count="5">
+            <div style="border-radius:var(--radius-lg);background:var(--color-bg);padding:clamp(14px,4vw,18px);display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                <strong style="font-size:26px;line-height:1.2">{{ s.label }}</strong>
+                <sc-if value="{{ s.req }}"><span class="tag tag-accent">บังคับ</span></sc-if>
+                <span style="margin-left:auto;font-size:21px;color:var(--color-neutral-700)">{{ s.countText }}</span>
+              </div>
+              <div style="font-size:21px;color:var(--color-neutral-700);text-wrap:pretty">{{ s.hint }}</div>
+              <sc-if value="{{ s.hasPhotos }}">
+                <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
+                  <sc-for list="{{ s.photos }}" as="p">
+                    <div style="position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:var(--color-neutral-200)">
+                      <img src="{{ p.url }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block">
+                      <div style="position:absolute;left:6px;right:6px;bottom:6px;border-radius:10px;padding:2px 8px;font-size:18px;line-height:1.3;background:{{ p.bg }};color:#fff">{{ p.label }}</div>
+                      <button type="button" onClick="{{ p.remove }}" aria-label="ลบรูป" style="position:absolute;top:6px;right:6px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(32,30,29,.72);color:#fff;font-size:26px;line-height:1;cursor:pointer">×</button>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ s.canAdd }}">
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                  <label class="btn btn-secondary" style="cursor:pointer">ถ่ายรูป<input type="file" accept="image/*" capture="environment" onChange="{{ s.onCam }}" style="display:none"></label>
+                  <label class="btn btn-ghost" style="cursor:pointer">เลือกจากคลังรูป<input type="file" accept="image/*" multiple="multiple" onChange="{{ s.onLib }}" style="display:none"></label>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ err.self }}"><div style="color:var(--color-accent-800);font-size:21px">{{ err.self }}</div></sc-if>
+      </section>
+
+      <section style="display:flex;flex-direction:column;gap:14px">
+        <label style="display:flex;gap:14px;align-items:flex-start;font-size:22px;cursor:pointer;text-wrap:pretty">
+          <input type="checkbox" checked="{{ f.consent }}" onChange="{{ on.consent }}" style="width:26px;height:26px;margin-top:6px;accent-color:var(--color-accent);flex:none">
+          <span>ข้าพเจ้ายินยอมให้ผู้จัดการเขตและฝ่ายบุคคลเก็บและใช้ข้อมูลและรูปถ่ายนี้ เพื่อพิจารณาการช่วยเหลือกรณีน้ำท่วม และยินยอมให้แสดงรูประดับน้ำและถนน (ไม่มีชื่อ) บนแผนที่น้ำท่วมให้เพื่อนพนักงานเห็น พร้อมยืนยันว่าข้อมูลเป็นความจริง</span>
+        </label>
+        <sc-if value="{{ err.consent }}"><div style="color:var(--color-accent-800);font-size:21px">{{ err.consent }}</div></sc-if>
+        <sc-if value="{{ sendErr }}"><div style="background:var(--color-accent-100);color:var(--color-accent-900);border-radius:var(--radius-lg);padding:12px 18px;font-size:22px">{{ sendErr }}</div></sc-if>
+        <button type="button" class="btn btn-primary btn-block" onClick="{{ submit }}" disabled="{{ sending }}" style="min-height:60px">{{ submitText }}</button>
+      </section>
+
+      <sc-if value="{{ mapOpen }}">
+        <div style="position:fixed;inset:0;z-index:1000;background:var(--color-bg);display:flex;flex-direction:column">
+          <div style="padding:14px 20px;display:flex;flex-direction:column;gap:4px">
+            <strong style="font-size:27px;line-height:1.2">ปักหมุดบ้านพัก</strong>
+            <span style="font-size:21px;color:var(--color-neutral-700)">เลื่อนแผนที่ไปที่บ้านของคุณ แล้วแตะตรงตำแหน่งบ้าน</span>
+          </div>
+          <div ref="{{ fmRef }}" style="flex:1;min-height:0;background:var(--color-neutral-100)"></div>
+          <div style="padding:12px 20px 20px;display:flex;flex-direction:column;gap:10px">
+            <div style="font-size:21px;color:var(--color-neutral-800)">{{ locText }}</div>
+            <sc-if value="{{ gpsErr }}"><div style="color:var(--color-accent-800);font-size:21px">{{ gpsErr }}</div></sc-if>
+            <sc-if value="{{ gpsHelp }}"><div style="background:var(--color-accent-2-100);color:var(--color-accent-2-900);border-radius:16px;padding:10px 14px;font-size:20px;text-wrap:pretty">{{ gpsHelp }}</div></sc-if>
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px">
+              <button type="button" class="btn btn-secondary" onClick="{{ useGps }}">{{ gpsBtnShort }}</button>
+              <button type="button" class="btn btn-primary" onClick="{{ closeMap }}">{{ closeMapText }}</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ showDone }}">
+    <main style="width:100%;max-width:640px;margin:0 auto;padding:12px 20px 80px;box-sizing:border-box">
+      <div style="background:var(--color-surface);border-radius:var(--radius-lg);padding:clamp(20px,5vw,32px);display:flex;flex-direction:column;gap:16px;align-items:flex-start">
+        <div style="width:72px;height:72px;border-radius:50%;background:var(--color-accent-2-300);display:grid;place-items:center;font-size:40px;color:var(--color-accent-2-900)">✓</div>
+        <h2 style="margin:0;text-wrap:balance">{{ doneTitle }}</h2>
+        <div style="font-size:24px">{{ doneText }}</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:21px;color:var(--color-neutral-700)">วันที่ส่งหลักฐานแล้ว</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <sc-for list="{{ doneDays }}" as="dd" hint-placeholder-count="1"><span class="tag tag-accent-2">{{ dd }}</span></sc-for>
+          </div>
+        </div>
+        <div style="font-size:22px;color:var(--color-neutral-700);text-wrap:pretty">ทุกวันที่ยังมาทำงานไม่ได้ ให้เปิดลิงก์นี้แล้วส่งหลักฐานของวันนั้น ถ้าลืมส่งวันไหน ส่งย้อนหลังได้</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" onClick="{{ sendMore }}">ส่งหลักฐานวันอื่น</button>
+          <button class="btn btn-secondary" onClick="{{ goMe }}">ดูข้อมูลของฉัน / PDF</button>
+        </div>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ showMeLogin }}">
+    <main style="width:100%;max-width:640px;margin:0 auto;padding:12px 20px 80px;box-sizing:border-box">
+      <div style="background:var(--color-surface);border-radius:var(--radius-lg);padding:clamp(20px,5vw,32px);display:flex;flex-direction:column;gap:18px">
+        <h2 style="margin:0">ดูข้อมูลของฉัน</h2>
+        <div style="font-size:22px;color:var(--color-neutral-700);text-wrap:pretty">ใส่รหัสพนักงานและเบอร์โทรที่ใช้ตอนส่งหลักฐาน เพื่อดูและพิมพ์ PDF ของแต่ละวัน</div>
+        <div class="field"><label>รหัสพนักงาน</label><input class="input" autocomplete="off" value="{{ meEmp }}" onChange="{{ onMeEmp }}"></div>
+        <div class="field"><label>เบอร์โทร</label><input class="input" type="tel" inputmode="tel" value="{{ mePhone }}" onChange="{{ onMePhone }}" onKeyDown="{{ onMeKey }}"></div>
+        <sc-if value="{{ meErr }}"><div style="color:var(--color-accent-800);font-size:22px">{{ meErr }}</div></sc-if>
+        <button class="btn btn-primary btn-block" onClick="{{ meLogin }}" disabled="{{ meLoading }}">{{ meLoginText }}</button>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ showMe }}">
+    <main style="width:100%;max-width:640px;margin:0 auto;padding:12px 20px 80px;box-sizing:border-box;display:flex;flex-direction:column;gap:18px">
+      <div style="background:var(--color-surface);border-radius:var(--radius-lg);padding:clamp(18px,5vw,24px);display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:21px;color:var(--color-neutral-700)">{{ me.meta }}</div>
+        <h2 style="margin:0;font-size:38px">{{ me.name }}</h2>
+        <div style="font-size:24px;font-weight:600;color:var(--color-accent-800)">{{ me.summary }}</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" onClick="{{ me.printAll }}" disabled="{{ me.empty }}">พิมพ์ PDF ทุกวัน</button>
+          <button class="btn btn-ghost" onClick="{{ meLogout }}">ไม่ใช่ฉัน</button>
+        </div>
+        <div style="font-size:19px;color:var(--color-neutral-700)">{{ syncText }}</div>
+      </div>
+      <sc-if value="{{ me.emptyText }}"><div style="background:var(--color-surface);border-radius:var(--radius-lg);padding:24px;font-size:23px;color:var(--color-neutral-700)">{{ me.emptyText }}</div></sc-if>
+      <sc-for list="{{ me.days }}" as="dy" hint-placeholder-count="0">
+        <button onClick="{{ dy.open }}" style="text-align:left;border:0;background:var(--color-surface);border-radius:var(--radius-lg);padding:16px 20px;display:flex;gap:14px;align-items:center;cursor:pointer;color:inherit;font-size:inherit" style-hover="background:var(--color-accent-100)">
+          <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px">
+            <strong style="font-size:26px;line-height:1.2">{{ dy.title }}</strong>
+            <span style="font-size:21px;color:var(--color-neutral-800)">{{ dy.meta }}</span>
+            <sc-if value="{{ dy.noSelf }}"><span class="tag tag-accent" style="align-self:flex-start">ไม่มีรูปคู่กับบ้าน</span></sc-if>
+          </span>
+          <span style="font-size:21px;font-weight:600;color:var(--color-accent-700);flex:none">ดู / PDF ›</span>
+        </button>
+      </sc-for>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ showPublicMap }}">
+    <main style="width:100%;max-width:1200px;margin:0 auto;padding:4px 20px 40px;box-sizing:border-box;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
+        <div style="flex:1;min-width:240px"><h2 style="margin:0">แผนที่น้ำท่วม</h2><div style="font-size:21px;color:var(--color-neutral-700)">{{ mapSummary }}</div></div>
+        <button class="btn btn-ghost" onClick="{{ syncNow }}" disabled="{{ syncing }}">{{ syncBtn }}</button>
+      </div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+        <span style="font-size:20px;color:var(--color-neutral-700)">ระดับน้ำ</span>
+        <sc-for list="{{ legend }}" as="l" hint-placeholder-count="6"><span style="display:flex;align-items:center;gap:6px;font-size:20px"><span style="width:18px;height:18px;border-radius:6px;background:{{ l.c }}"></span>{{ l.label }}</span></sc-for>
+      </div>
+      <sc-if value="{{ mapErr }}"><div style="background:var(--color-accent-100);color:var(--color-accent-900);border-radius:var(--radius-lg);padding:12px 18px;font-size:22px">{{ mapErr }}</div></sc-if>
+      <div ref="{{ pmRef }}" style="height:max(420px,calc(100vh - 300px));border-radius:var(--radius-lg);overflow:hidden;background:var(--color-neutral-100)"></div>
+      <div style="font-size:19px;color:var(--color-neutral-700);text-wrap:pretty">แตะรูปบนแผนที่เพื่อดูรูประดับน้ำและถนนของจุดนั้น แสดงเฉพาะรูประดับน้ำและถนน ไม่แสดงชื่อพนักงาน ตำแหน่งเป็นค่าประมาณ (รัศมีราว 100 เมตร)</div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ showPin }}">
+    <main style="width:100%;max-width:520px;margin:0 auto;padding:40px 20px 80px;box-sizing:border-box">
+      <div style="background:var(--color-surface);border-radius:var(--radius-lg);padding:32px;display:flex;flex-direction:column;gap:18px">
+        <h2 style="margin:0">สำหรับผู้จัดการเขต / HR</h2>
+        <div style="font-size:22px;color:var(--color-neutral-700)">AM และ HR ใช้ PIN เดียวกัน เพื่อดูข้อมูล พิมพ์ PDF และดาวน์โหลดรูป</div>
+        <div class="field"><label>รหัส PIN</label><input class="input" type="password" inputmode="numeric" autocomplete="off" value="{{ pin }}" onChange="{{ onPin }}" onKeyDown="{{ onPinKey }}"></div>
+        <sc-if value="{{ pinErr }}"><div style="color:var(--color-accent-800);font-size:22px">{{ pinErr }}</div></sc-if>
+        <button class="btn btn-primary btn-block" onClick="{{ login }}" disabled="{{ loading }}">{{ loginText }}</button>
+        <button class="btn btn-ghost" onClick="{{ goForm }}" style="align-self:flex-start">กลับไปหน้าฟอร์มพนักงาน</button>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ showList }}">
+    <main style="width:100%;max-width:1200px;margin:0 auto;padding:12px 20px 60px;box-sizing:border-box;display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap">
+        <div style="flex:1;min-width:260px"><h2 style="margin:0">พนักงานที่ส่งหลักฐาน</h2><div style="font-size:22px;color:var(--color-neutral-700)">{{ listSummary }}</div><div style="font-size:19px;color:var(--color-neutral-700)">{{ syncText }}</div></div>
+        <button class="btn btn-primary" onClick="{{ zipList }}">{{ zipListText }}</button>
+        <sc-if value="{{ rootUrl }}"><a class="btn btn-secondary" href="{{ rootUrl }}" target="_blank" rel="noopener" style="text-decoration:none">เปิดโฟลเดอร์ Drive</a></sc-if>
+        <button class="btn btn-ghost" onClick="{{ syncNow }}" disabled="{{ syncing }}">{{ syncBtn }}</button>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-ghost" onClick="{{ copyForm }}">{{ copyFormText }}</button>
+        <button class="btn btn-ghost" onClick="{{ copyHr }}">{{ copyHrText }}</button>
+        <button class="btn btn-ghost" onClick="{{ copyMap }}">{{ copyMapText }}</button>
+      </div>
+      <sc-if value="{{ listErr }}"><div style="background:var(--color-accent-100);color:var(--color-accent-900);border-radius:var(--radius-lg);padding:12px 18px;font-size:22px">{{ listErr }}</div></sc-if>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:24px;align-items:start">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div ref="{{ amRef }}" style="height:min(620px,60vh);border-radius:var(--radius-lg);overflow:hidden;background:var(--color-neutral-100)"></div>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+            <sc-for list="{{ legend }}" as="l" hint-placeholder-count="6"><span style="display:flex;align-items:center;gap:6px;font-size:19px"><span style="width:16px;height:16px;border-radius:5px;background:{{ l.c }}"></span>{{ l.label }}</span></sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <sc-for list="{{ brSum }}" as="b" hint-placeholder-count="0"><button type="button" onClick="{{ b.pick }}" style="border:0;border-radius:999px;padding:4px 16px;font-size:21px;cursor:pointer;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button></sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:10px">
+            <input class="input" placeholder="ค้นหาชื่อ รหัส หรือเบอร์โทร" value="{{ q }}" onChange="{{ onQ }}">
+            <select class="input" value="{{ fbr }}" onChange="{{ onBr }}">
+              <option value="all">ทุกสาขา</option>
+              <sc-for list="{{ branches }}" as="b"><option value="{{ b.code }}">{{ b.name }}</option></sc-for>
+            </select>
+          </div>
+          <sc-if value="{{ emptyText }}"><div style="background:var(--color-surface);border-radius:var(--radius-lg);padding:28px;font-size:23px;color:var(--color-neutral-700);text-wrap:pretty">{{ emptyText }}</div></sc-if>
+          <sc-for list="{{ rows }}" as="r" hint-placeholder-count="0">
+            <button onClick="{{ r.open }}" style="text-align:left;border:0;background:var(--color-surface);border-radius:var(--radius-lg);padding:14px 16px;display:flex;gap:14px;align-items:center;cursor:pointer;color:inherit;font-size:inherit" style-hover="background:var(--color-accent-100)">
+              <sc-if value="{{ r.thumb }}"><img src="{{ r.thumb }}" alt="" style="width:72px;height:72px;border-radius:16px;object-fit:cover;flex:none"></sc-if>
+              <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
+                <span style="display:flex;gap:12px;align-items:baseline;flex-wrap:wrap"><strong style="font-size:27px;line-height:1.2;flex:1;min-width:0">{{ r.name }}</strong><span style="font-size:20px;color:var(--color-neutral-700)">{{ r.last }}</span></span>
+                <span style="font-size:22px;color:var(--color-neutral-800)">{{ r.meta }}</span>
+                <span style="display:flex;gap:8px;flex-wrap:wrap">
+                  <span class="tag tag-accent-2">{{ r.days }}</span>
+                  <span class="tag tag-neutral">{{ r.photos }}</span>
+                  <sc-if value="{{ r.level }}"><span class="tag tag-outline">{{ r.level }}</span></sc-if>
+                  <sc-if value="{{ r.noSelf }}"><span class="tag tag-accent">{{ r.noSelf }}</span></sc-if>
+                </span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ showDetail }}">
+    <div data-noprint="1" style="width:100%;max-width:900px;margin:0 auto;padding:8px 20px 10px;box-sizing:border-box;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <button class="btn btn-ghost" onClick="{{ back }}">{{ backText }}</button>
+      <span style="flex:1"></span>
+      <sc-if value="{{ d.isAm }}">
+        <sc-if value="{{ d.folder }}"><a class="btn btn-secondary" href="{{ d.folder }}" target="_blank" rel="noopener" style="text-decoration:none">เปิดโฟลเดอร์รูป</a></sc-if>
+      </sc-if>
+      <sc-if value="{{ d.isAm }}"><button class="btn btn-secondary" onClick="{{ zipCase }}">{{ zipCaseText }}</button></sc-if>
+      <button class="btn btn-primary" onClick="{{ print }}">{{ printText }}</button>
+    </div>
+    <div data-noprint="1" style="width:100%;max-width:900px;margin:0 auto;padding:0 20px 14px;box-sizing:border-box;display:flex;gap:8px;flex-wrap:wrap">
+      <sc-for list="{{ d.dayTabs }}" as="t" hint-placeholder-count="0"><button type="button" onClick="{{ t.pick }}" style="border:0;border-radius:999px;padding:4px 16px;font-size:21px;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }}">{{ t.label }}</button></sc-for>
+    </div>
+    <article data-print-doc="1" style="width:calc(100% - 40px);max-width:900px;margin:0 auto 60px;background:var(--color-surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:clamp(20px,5vw,40px);box-sizing:border-box;display:flex;flex-direction:column;gap:28px">
+      <section style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">
+        <div style="flex:1;min-width:240px;display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:21px;color:var(--color-neutral-700)">หลักฐานประกอบการขอความช่วยเหลือ</div>
+          <h2 style="margin:0">พนักงานประสบภัยน้ำท่วม</h2>
+          <div style="font-size:22px;color:var(--color-neutral-700)">{{ d.printed }}</div>
+        </div>
+        <sc-if value="{{ d.qr }}">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+            <img src="{{ d.qr }}" alt="QR โฟลเดอร์รูป" style="width:130px;height:130px;display:block">
+            <div style="font-size:18px;color:var(--color-neutral-700)">สแกนเปิดโฟลเดอร์รูป</div>
+          </div>
+        </sc-if>
+      </section>
+      <section style="display:flex;flex-direction:column;gap:10px">
+        <h3 style="margin:0;font-size:30px">ข้อมูลพนักงาน</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px 28px">
+          <sc-for list="{{ d.info }}" as="i" hint-placeholder-count="5">
+            <div style="display:flex;flex-direction:column"><span style="font-size:19px;color:var(--color-neutral-700)">{{ i.k }}</span><span style="font-size:25px;font-weight:600">{{ i.v }}</span></div>
+          </sc-for>
+        </div>
+      </section>
+      <section style="display:flex;flex-direction:column;gap:8px;background:var(--color-accent-100);border-radius:var(--radius-lg);padding:20px 24px">
+        <span style="font-size:19px;color:var(--color-accent-900)">{{ d.rangeLabel }}</span>
+        <span style="font-size:30px;font-weight:700;color:var(--color-accent-900);line-height:1.25">{{ d.days }}</span>
+        <sc-if value="{{ d.range }}"><span style="font-size:23px;color:var(--color-accent-900);text-wrap:pretty">{{ d.range }}</span></sc-if>
+      </section>
+      <section style="display:flex;flex-direction:column;gap:10px">
+        <h3 style="margin:0;font-size:30px">บ้านพัก</h3>
+        <div style="font-size:24px">{{ d.address }}</div>
+        <div style="font-size:21px;color:var(--color-neutral-700)">{{ d.locText }}</div>
+        <sc-if value="{{ d.hasLoc }}"><div ref="{{ dmRef }}" style="height:280px;border-radius:var(--radius-lg);overflow:hidden;background:var(--color-neutral-100)"></div></sc-if>
+      </section>
+      <section style="display:flex;flex-direction:column;gap:14px">
+        <h3 style="margin:0;font-size:30px">{{ d.photoTitle }}</h3>
+        <sc-if value="{{ d.photoMsg }}"><div style="font-size:22px;color:var(--color-neutral-700)">{{ d.photoMsg }}</div></sc-if>
+        <sc-for list="{{ d.dayGroups }}" as="g" hint-placeholder-count="0">
+          <section style="display:flex;flex-direction:column;gap:10px;border-top:2px solid var(--color-neutral-200);padding-top:16px">
+            <div style="display:flex;gap:10px;align-items:baseline;flex-wrap:wrap">
+              <strong style="font-size:27px;line-height:1.2">{{ g.title }}</strong>
+              <span style="font-size:21px;color:var(--color-neutral-700)">{{ g.count }}</span>
+              <sc-if value="{{ g.noSelf }}"><span class="tag tag-accent">ไม่มีรูปคู่กับบ้าน</span></sc-if>
+            </div>
+            <sc-if value="{{ g.meta }}"><div style="font-size:22px;text-wrap:pretty">{{ g.meta }}</div></sc-if>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:14px">
+              <sc-for list="{{ g.photos }}" as="p">
+                <figure style="margin:0;display:flex;flex-direction:column;gap:6px">
+                  <img src="{{ p.src }}" alt="{{ p.type }}" style="width:100%;border-radius:14px;display:block;background:var(--color-neutral-100)">
+                  <figcaption style="font-size:20px;line-height:1.35"><strong>{{ p.type }}</strong> · {{ p.taken }}<sc-if value="{{ p.warn }}"><span style="display:block;color:var(--color-accent-800)">{{ p.warn }}</span></sc-if></figcaption>
+                </figure>
+              </sc-for>
+            </div>
+          </section>
+        </sc-for>
+      </section>
+      <section style="font-size:19px;color:var(--color-neutral-700);display:flex;flex-direction:column;gap:2px">
+        <span>{{ d.submits }}</span>
+        <span>ผู้รวบรวม: ผู้จัดการเขต ________________________ วันที่ ____________</span>
+      </section>
+    </article>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;defaultView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;form&quot;,&quot;me&quot;,&quot;map&quot;,&quot;am&quot;],&quot;default&quot;:&quot;form&quot;,&quot;tsType&quot;:&quot;'form'|'me'|'map'|'am'&quot;},&quot;maxPerType&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;min&quot;:1,&quot;max&quot;:10,&quot;default&quot;:3,&quot;tsType&quot;:&quot;number&quot;},&quot;requireLocation&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const BR=[['FPR','ฟิวเจอร์พาร์ครังสิต',13.9902097,100.616539],['BU','ม.กรุงเทพ',14.0409154,100.6129333],['TU','ม.ธรรมศาสตร์',14.0657516,100.6056416],['ACP','อยุธยา ซิตี้ปาร์ค',14.3372821,100.6093961],['CAY','เซ็นทรัล อยุธยา',14.3315127,100.6112829],['MVR','มาร์เก็ตวิลเลจ รังสิต',14.0004481,100.6847768],['SMA','สายไหม อเวนิว',13.9205044,100.6805034],['YCR','ยิ่งเจริญ สแควร์',13.8965994,100.6086939],['ZR','เซียร์รังสิต',13.9611771,100.6221438]].map(([code,name,lat,lng])=>({code,name,lat,lng}));
+const BRN=Object.fromEntries(BR.map(b=>[b.code,b.name]));
+const TYPES=[
+  {key:'self',label:'ตัวเองคู่กับบ้านที่ท่วม',req:true,hint:'ให้เห็นหน้าตัวเองและบ้านพักที่มีน้ำท่วมอยู่ในภาพเดียวกัน'},
+  {key:'level',label:'ระดับน้ำ',hint:'ให้เห็นความสูงของน้ำเทียบกับประตู ผนัง หรือตัวคน (รูปนี้จะแสดงบนแผนที่น้ำท่วม)'},
+  {key:'inside',label:'ความเสียหายในบ้าน',hint:'เช่น น้ำเข้าห้อง เฟอร์นิเจอร์หรือของใช้เสียหาย'},
+  {key:'road',label:'ถนนหรือทางเข้าบ้าน',hint:'ให้เห็นว่าเส้นทางถูกน้ำท่วมจนเดินทางมาทำงานไม่ได้ (รูปนี้จะแสดงบนแผนที่น้ำท่วม)'},
+  {key:'asset',label:'ทรัพย์สินหรือยานพาหนะเสียหาย',hint:'เช่น รถจักรยานยนต์ รถยนต์ เครื่องใช้ไฟฟ้า'}];
+const TYPEN=Object.fromEntries(TYPES.map(t=>[t.key,t.label]));
+const LEVELS=['ข้อเท้า','เข่า','เอว','อก','สูงกว่าอก'];
+const LVC={'':'var(--color-neutral-500)','ข้อเท้า':'var(--color-accent-2-500)','เข่า':'var(--color-accent-300)','เอว':'var(--color-accent-500)','อก':'var(--color-accent-700)','สูงกว่าอก':'var(--color-accent-900)'};
+const TILE='https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
+const ATTR='Tiles © Esri';
+const FKEY='flood_evidence_form_v3',PKEY='flood_evidence_am_pin',DKEY='flood_evidence_sent_days',MKEY='flood_evidence_me';
+const GAS=()=>(window.FLOOD_GAS_URL||'').trim();
+const pad=n=>String(n).padStart(2,'0');
+const isoOf=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const todayISO=()=>isoOf(new Date());
+const fmtFull=ts=>new Date(ts).toLocaleString('th-TH',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'})+' น.';
+const fmtShort=ts=>new Date(ts).toLocaleString('th-TH',{day:'numeric',month:'short',year:'2-digit',hour:'2-digit',minute:'2-digit'})+' น.';
+const fmtTime=ts=>new Date(ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})+' น.';
+const fmtDayLong=iso=>new Date(iso+'T00:00:00').toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+const fmtDayShort=iso=>new Date(iso+'T00:00:00').toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'});
+const ymd=v=>String(v||'').replace(/^'/,'').slice(0,10);
+const tru=v=>v===true||v==='TRUE'||v==='true';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const emptyPhotos=()=>Object.fromEntries(TYPES.map(t=>[t.key,[]]));
+const blankForm=()=>({emp_id:'',name:'',position:'',branch:'',phone:'',address:'',loc:null,level:'',note:'',day:todayISO(),consent:false});
+const loadForm=()=>{try{const s=JSON.parse(localStorage.getItem(FKEY)||'null');if(s)return {...blankForm(),...s,consent:false,day:todayISO(),level:'',note:''};}catch(e){}return blankForm();};
+const loadSent=()=>{try{return JSON.parse(localStorage.getItem(DKEY)||'{}')||{};}catch(e){return {};}};
+class SrvErr extends Error{}
+const msgOf=x=>x instanceof SrvErr?x.message:'เกิดข้อผิดพลาด กรุณาลองใหม่';
+function exifInfo(buf){const out={taken:null,gps:null};try{const v=new DataView(buf);if(v.getUint16(0)!==0xFFD8)return out;let o=2;
+  while(o+4<v.byteLength){const m=v.getUint16(o);if((m&0xFF00)!==0xFF00)break;
+    if(m===0xFFE1&&v.getUint32(o+4)===0x45786966){const t=o+10,le=v.getUint16(t)===0x4949,g16=p=>v.getUint16(p,le),g32=p=>v.getUint32(p,le);
+      const ents=off=>{const n=g16(t+off),r={};for(let i=0;i<n;i++){const e=t+off+2+i*12;r[g16(e)]=e;}return r;};
+      const str=e=>{const c=g32(e+4),p=c<=4?e+8:t+g32(e+8);let s='';for(let i=0;i<c;i++){const ch=v.getUint8(p+i);if(!ch)break;s+=String.fromCharCode(ch);}return s;};
+      const i0=ents(g32(t+4));let ds='';
+      if(i0[34665]){const ex=ents(g32(i0[34665]+8));if(ex[36867])ds=str(ex[36867]);}if(!ds&&i0[306])ds=str(i0[306]);
+      const r=ds.match(/(\d{4}):(\d\d):(\d\d) (\d\d):(\d\d):(\d\d)/);if(r)out.taken=new Date(+r[1],r[2]-1,+r[3],+r[4],+r[5],+r[6]).getTime();
+      if(i0[34853]){const g=ents(g32(i0[34853]+8));
+        const dms=e=>{const p=t+g32(e+8);let x=0;for(let i=0;i<3;i++){const n=g32(p+i*8),d=g32(p+i*8+4);x+=(d?n/d:0)/Math.pow(60,i);}return x;};
+        if(g[2]&&g[4]){let lat=dms(g[2]),lng=dms(g[4]);if(g[1]&&str(g[1])==='S')lat=-lat;if(g[3]&&str(g[3])==='W')lng=-lng;
+          if(lat>5&&lat<21&&lng>97&&lng<106)out.gps={lat,lng};}}
+      return out;}
+    o+=2+v.getUint16(o+2);}}catch(e){}return out;}
+const readExif=file=>new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(exifInfo(fr.result));fr.onerror=()=>r({taken:null,gps:null});fr.readAsArrayBuffer(file.slice(0,262144));});
+const UA=navigator.userAgent||'';
+const IN_LINE=/\bLine\//i.test(UA),IS_IOS=/iPhone|iPad|iPod/i.test(UA);
+const GEO_HELP=IN_LINE?'คุณเปิดลิงก์จากในแอป LINE ซึ่งมักใช้ตำแหน่งไม่ได้ กดปุ่ม “เปิดในเบราว์เซอร์” ด้านบนของฟอร์ม แล้วกด “ใช้ตำแหน่งปัจจุบัน” อีกครั้ง'
+  :IS_IOS?'วิธีเปิดสิทธิ์บน iPhone: ตั้งค่า › ความเป็นส่วนตัวและความปลอดภัย › บริการหาตำแหน่ง › เปิด แล้วเลือก “เว็บไซต์ Safari” › “ขณะใช้แอป” จากนั้นโหลดหน้านี้ใหม่'
+  :'วิธีเปิดสิทธิ์บน Android: แตะไอคอนหน้าช่องที่อยู่เว็บ › สิทธิ์ (หรือ การตั้งค่าเว็บไซต์) › ตำแหน่ง › อนุญาต และเปิด “ตำแหน่ง” ของโทรศัพท์ จากนั้นโหลดหน้านี้ใหม่';
+function stamp(file,lines){return new Promise(res=>{const url=URL.createObjectURL(file);const img=new Image();
+  img.onload=()=>{const sc=Math.min(1,1600/Math.max(img.width,img.height));const w=Math.round(img.width*sc),h=Math.round(img.height*sc);
+    const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');g.drawImage(img,0,0,w,h);
+    const fs=Math.max(16,Math.round(w/36)),lh=fs*1.35,bh=lh*lines.length+fs*0.9;
+    g.fillStyle='rgba(20,20,20,.62)';g.fillRect(0,h-bh,w,bh);g.fillStyle='#fff';g.font=`600 ${fs}px Sarabun, sans-serif`;g.textBaseline='top';
+    lines.forEach((l,i)=>g.fillText(l,fs*0.6,h-bh+fs*0.45+i*lh));
+    const S=160,tc=document.createElement('canvas');tc.width=S;tc.height=S;const m=Math.min(img.width,img.height);
+    tc.getContext('2d').drawImage(img,(img.width-m)/2,(img.height-m)/2,m,m,0,0,S,S);
+    URL.revokeObjectURL(url);res({data:c.toDataURL('image/jpeg',0.85),thumb:tc.toDataURL('image/jpeg',0.6)});};
+  img.onerror=()=>{URL.revokeObjectURL(url);res(null);};img.src=url;});}
+function mkMap(el){const m=L.map(el,{scrollWheelZoom:false}).setView([14.08,100.63],10);L.tileLayer(TILE,{maxZoom:19,attribution:ATTR}).addTo(m);setTimeout(()=>m.invalidateSize(),250);return m;}
+const brMarker=b=>L.circleMarker([b.lat,b.lng],{radius:7,color:'#201e1d',weight:3,fillColor:'#f5ead8',fillOpacity:1}).bindTooltip('สาขา '+b.name);
+const homeMarker=(lat,lng)=>L.circleMarker([lat,lng],{radius:10,color:'#8c491a',weight:3,fillColor:'#c67139',fillOpacity:.9});
+function thumbIcon(thumb,count,level){const c=LVC[level||'']||LVC[''];
+  const inner=thumb?`<img src="${thumb}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:14px;display:block">`
+    :`<div style="width:100%;height:100%;border-radius:14px;display:grid;place-items:center;color:#fff;font:700 18px Sarabun,sans-serif;text-align:center;line-height:1.1">${esc(level||'ไม่มีรูป')}</div>`;
+  return L.divIcon({className:'',iconSize:[84,96],iconAnchor:[42,96],popupAnchor:[0,-92],
+    html:`<div style="position:relative;width:84px;height:84px;box-sizing:border-box;border:4px solid ${c};border-radius:19px;background:${c};box-shadow:0 6px 16px rgba(32,30,29,.3)">${inner}${count?`<span style="position:absolute;left:8px;bottom:2px;color:#fff;font:700 26px Sarabun,sans-serif;text-shadow:0 1px 4px rgba(0,0,0,.8)">${count}</span>`:''}<span style="position:absolute;left:50%;bottom:-14px;margin-left:-10px;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:12px solid ${c}"></span></div>`});}
+
+class Component extends DCLogic{
+  state={view:'form',f:loadForm(),photos:emptyPhotos(),err:{},gpsState:'idle',gpsErr:'',geoDenied:false,sending:false,progress:'',sendErr:'',done:null,sent:loadSent(),mapOpen:false,
+    pin:'',pinErr:'',loading:false,listErr:'',cases:[],rootUrl:'',q:'',fbr:'all',copied:'',
+    detail:null,detailFrom:'am',selPhotos:null,selDays:null,selErr:'',onlyDay:'',
+    me:null,meErr:'',meLoading:false,meEmp:'',mePhone:'',
+    points:[],mapErr:'',syncedAt:0,syncing:false,zip:null};
+  popCache={};
+  mref(k,init){return el=>{if(!el){if(this[k])this[k].remove();this[k]=null;this[k+'El']=null;this[k+'Key']=null;return;}
+    this[k+'El']=el;this.whenL(()=>{if(this[k+'El']!==el||this[k])return;this[k]=mkMap(el);this[k+'Lyr']=L.layerGroup().addTo(this[k]);init&&init(this[k]);this.drawMaps();});};}
+  whenL(cb){if(window.L)cb();else setTimeout(()=>this.whenL(cb),150);}
+  fmRef=this.mref('fm',m=>{m.on('click',e=>this.setLoc(e.latlng.lat,e.latlng.lng,'ปักหมุดบนแผนที่'));
+    const l=this.state.f.loc,b=BR.find(x=>x.code===this.state.f.branch);if(l)m.setView([l.lat,l.lng],16);else if(b)m.setView([b.lat,b.lng],12);});
+  amRef=this.mref('am');dmRef=this.mref('dm');pmRef=this.mref('pm');
+  componentDidMount(){
+    try{navigator.permissions&&navigator.permissions.query({name:'geolocation'}).then(p=>{const u=()=>this.setState({geoDenied:p.state==='denied'});u();p.onchange=u;}).catch(()=>{});}catch(e){}
+    this.onHash=()=>this.route();window.addEventListener('hashchange',this.onHash);window.addEventListener('popstate',this.onHash);
+    this.onVis=()=>{if(document.visibilityState==='visible')this.sync(true);};document.addEventListener('visibilitychange',this.onVis);
+    this.timer=setInterval(()=>{if(document.visibilityState==='visible'&&['list','map','me'].includes(this.state.view))this.sync(true);},60000);
+    const dv=this.props.defaultView;if(!location.hash&&dv&&dv!=='form')history.replaceState(null,'','#'+dv);
+    this.route();
+  }
+  componentWillUnmount(){window.removeEventListener('hashchange',this.onHash);window.removeEventListener('popstate',this.onHash);document.removeEventListener('visibilitychange',this.onVis);clearInterval(this.timer);}
+  componentDidUpdate(){this.drawMaps();}
+  go=h=>()=>{history.pushState(null,'',h?'#'+h:location.pathname+location.search);this.route();window.scrollTo(0,0);};
+  route(){const h=location.hash.replace('#','');
+    if(h==='am'){const p=sessionStorage.getItem(PKEY);if(p){this.setState({pin:p});this.loadList(p);}else this.setState({view:'pin'});}
+    else if(h==='map'){this.setState({view:'map'});this.loadMap();}
+    else if(h==='me'){let cr=null;try{cr=JSON.parse(sessionStorage.getItem(MKEY)||'null');}catch(e){}
+      const f=this.state.f;if(!cr&&f.emp_id&&f.phone)cr={emp:f.emp_id.trim().toUpperCase(),phone:f.phone.replace(/\D/g,'')};
+      if(cr){this.setState({view:'me',meEmp:cr.emp,mePhone:cr.phone});this.loadMe(cr.emp,cr.phone);}else this.setState({view:'melogin',meEmp:f.emp_id,mePhone:f.phone});}
+    else{this.setState({view:'form'});this.syncSent();}}
+  sync(silent){const v=this.state.view;if(v==='list')this.loadList(this.state.pin,true);else if(v==='map')this.loadMap(true);
+    else if(v==='me')this.loadMe(this.state.meEmp,this.state.mePhone,true);else if(v==='form')this.syncSent();}
+  async getJ(params){if(!GAS())throw new SrvErr('ยังไม่ได้เชื่อมต่อ Google Apps Script (ตั้งค่าในไฟล์ config.js)');
+    let r;try{r=await fetch(GAS()+'?'+new URLSearchParams(params));}catch(x){throw new SrvErr('เชื่อมต่อระบบไม่ได้ กรุณาตรวจสอบอินเทอร์เน็ต');}
+    let j;try{j=await r.json();}catch(x){throw new SrvErr('ระบบตอบกลับไม่ถูกต้อง');}
+    if(!j.ok)throw new SrvErr(j.error||'เกิดข้อผิดพลาด');return j;}
+  mergeSent(id,list){const sent={...this.state.sent,[id]:[...new Set([...(this.state.sent[id]||[]),...list.map(ymd)])]};try{localStorage.setItem(DKEY,JSON.stringify(sent));}catch(e){}this.setState({sent});}
+  syncSent(){const f=this.state.f,id=f.emp_id.trim().toUpperCase(),ph=f.phone.replace(/\D/g,'');if(!GAS()||!id||ph.length<9)return;
+    this.getJ({action:'me',emp:id,phone:ph,summary:1}).then(j=>{this.mergeSent(id,j.day_list||[]);this.setState({syncedAt:Date.now()});}).catch(()=>{});}
+  loadMap(silent){this.setState({syncing:true,mapErr:silent?this.state.mapErr:''});
+    this.getJ({action:'map'}).then(j=>{this.popCache={};this.setState({points:j.points||[],syncing:false,syncedAt:Date.now(),mapErr:''});}).catch(x=>this.setState({syncing:false,mapErr:msgOf(x)}));}
+  loadMe(emp,phone,silent){this.setState({meLoading:true,meErr:'',syncing:true});
+    this.getJ({action:'me',emp,phone,summary:1}).then(j=>{sessionStorage.setItem(MKEY,JSON.stringify({emp,phone}));this.mergeSent(emp,j.day_list||[]);
+      this.setState(s=>({me:j,meLoading:false,syncing:false,syncedAt:Date.now(),view:s.view==='detail'?'detail':'me'}));})
+    .catch(x=>{if(silent){this.setState({meLoading:false,syncing:false});return;}sessionStorage.removeItem(MKEY);this.setState({meLoading:false,syncing:false,view:'melogin',meErr:msgOf(x)});});}
+  meLogin=()=>{const e=String(this.state.meEmp||'').trim().toUpperCase(),p=String(this.state.mePhone||'').replace(/\D/g,'');
+    if(!e||!p){this.setState({meErr:'กรุณากรอกรหัสพนักงานและเบอร์โทร'});return;}this.setState({meEmp:e,mePhone:p});this.loadMe(e,p);};
+  meLogout=()=>{sessionStorage.removeItem(MKEY);this.setState({me:null,view:'melogin',meEmp:'',mePhone:''});};
+  async loadList(pin,silent){this.setState({loading:!silent,syncing:true,listErr:silent?this.state.listErr:'',pinErr:''});
+    try{const j=await this.getJ({action:'list',pin});sessionStorage.setItem(PKEY,pin);
+      this.setState(s=>({loading:false,syncing:false,syncedAt:Date.now(),listErr:'',cases:j.cases||[],rootUrl:j.root_url||'',view:s.view==='detail'?'detail':'list'}));}
+    catch(x){const m=msgOf(x);
+      if(silent||this.state.view==='list')this.setState({loading:false,syncing:false,listErr:m});else{sessionStorage.removeItem(PKEY);this.setState({loading:false,syncing:false,view:'pin',pinErr:m});}}}
+  login=()=>{const p=this.state.pin.trim();if(!p){this.setState({pinErr:'กรุณาใส่รหัส PIN'});return;}if(location.hash!=='#am')history.replaceState(null,'','#am');this.loadList(p);};
+  logout=()=>{sessionStorage.removeItem(PKEY);this.setState({pin:'',cases:[],view:'pin',detail:null,zip:null});};
+  openCase=id=>async()=>{const c=this.state.cases.find(x=>String(x.employee_id)===id);if(!c)return;const tok=this.tok=Math.random();
+    this.setState({view:'detail',detail:c,detailFrom:'am',selPhotos:null,selDays:null,selErr:'',onlyDay:''});window.scrollTo(0,0);
+    try{const j=await this.getJ({action:'case',pin:this.state.pin,emp:id});if(this.tok===tok)this.setState({selPhotos:j.photos||[],selDays:j.days||[]});}
+    catch(x){if(this.tok===tok)this.setState({selErr:msgOf(x),selPhotos:[]});}};
+  openMine=day=>async()=>{const me=this.state.me;if(!me||!me.case)return;const tok=this.tok=Math.random();
+    this.setState({view:'detail',detail:me.case,detailFrom:'me',selPhotos:null,selDays:me.days||[],selErr:'',onlyDay:day||''});window.scrollTo(0,0);
+    try{const j=await this.getJ({action:'me',emp:this.state.meEmp,phone:this.state.mePhone});if(this.tok===tok)this.setState({selPhotos:j.photos||[],selDays:j.days||[]});}
+    catch(x){if(this.tok===tok)this.setState({selErr:msgOf(x),selPhotos:[]});}};
+  zipDl(params,label){if(this.state.zip&&this.state.zip.url)URL.revokeObjectURL(this.state.zip.url);
+    this.setState({zip:{busy:true,text:`กำลังรวมรูป${label}เป็นไฟล์ ZIP… อาจใช้เวลา 1–2 นาที`}});
+    this.getJ({action:'zip',pin:this.state.pin,...params}).then(j=>{const b=atob(j.data),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);
+      const url=URL.createObjectURL(new Blob([u],{type:'application/zip'}));
+      const a=document.createElement('a');a.href=url;a.download=j.name;document.body.appendChild(a);a.click();a.remove();
+      this.setState({zip:{url,name:j.name,text:`ดาวน์โหลดแล้ว: ${j.name} (${j.count} รูป · ${j.size_mb} MB) ถ้าไฟล์ไม่เริ่มโหลด กดปุ่ม “ดาวน์โหลด ZIP”`}});})
+      .catch(x=>this.setState({zip:{text:msgOf(x)}}));}
+  copy(key,text){navigator.clipboard&&navigator.clipboard.writeText(text).then(()=>{this.setState({copied:key});setTimeout(()=>{if(this.state.copied===key)this.setState({copied:''});},2000);});}
+  baseUrl(){return location.origin+location.pathname;}
+  maxP(){return Math.max(1,Math.min(10,this.props.maxPerType??3));}
+  sentDays(){return (this.state.sent[this.state.f.emp_id.trim().toUpperCase()]||[]).slice().sort();}
+  setF(k,v){this.setState(s=>{const f={...s.f,[k]:v};const {consent,day,level,note,...keep}=f;try{localStorage.setItem(FKEY,JSON.stringify(keep));}catch(e){}return {f,err:{...s.err,[k]:''}};});}
+  setLoc(lat,lng,src,acc){this.setF('loc',{lat,lng,src,acc:acc||null});this.setState(s=>({err:{...s.err,loc:''}}));}
+  openMap=()=>{document.body.style.overflow='hidden';this.setState({mapOpen:true});};
+  closeMap=()=>{document.body.style.overflow='';this.setState({mapOpen:false});};
+  useGps=()=>{if(!navigator.geolocation){this.setState({gpsErr:'โทรศัพท์นี้ไม่รองรับการหาตำแหน่ง กรุณาปักหมุดบนแผนที่แทน'});return;}
+    this.setState({gpsState:'busy',gpsErr:''});
+    navigator.geolocation.getCurrentPosition(p=>{this.setState({gpsState:'idle',geoDenied:false});this.setLoc(p.coords.latitude,p.coords.longitude,'GPS โทรศัพท์',p.coords.accuracy);if(this.fm)this.fm.setView([p.coords.latitude,p.coords.longitude],16);},
+      e=>{this.setState({gpsState:'idle',geoDenied:e.code===1,gpsErr:e.code===1?'โทรศัพท์ยังไม่อนุญาตให้ใช้ตำแหน่ง ปักหมุดบนแผนที่แทนได้เลย หรือเปิดสิทธิ์ตามวิธีด้านล่าง':'หาตำแหน่งไม่สำเร็จ ปักหมุดบนแผนที่แทนได้เลย'});if(!this.state.mapOpen)this.openMap();},
+      {enableHighAccuracy:true,timeout:15000,maximumAge:0});};
+  pick=(type,cam)=>async e=>{const files=[...(e.target.files||[])];e.target.value='';
+    for(const file of files){if(!/^image\//.test(file.type))continue;if(this.state.photos[type].length>=this.maxP())break;
+      const x=await readExif(file);let taken=x.taken,src=taken?'ข้อมูลในรูป':'';
+      if(x.gps&&!this.state.f.loc)this.setLoc(x.gps.lat,x.gps.lng,'พิกัดจากรูปถ่าย');
+      if(!taken&&cam&&Date.now()-file.lastModified<10*60e3){taken=file.lastModified;src='ถ่ายผ่านระบบ';}
+      const p={id:Math.random().toString(36).slice(2),file,url:URL.createObjectURL(file),taken,src};
+      this.setState(s=>({photos:{...s.photos,[type]:[...s.photos[type],p]},err:{...s.err,self:''}}));}};
+  removePhoto=(type,id)=>()=>this.setState(s=>{const p=s.photos[type].find(x=>x.id===id);if(p)URL.revokeObjectURL(p.url);return {photos:{...s.photos,[type]:s.photos[type].filter(x=>x.id!==id)}};});
+  validate(){const s=this.state,f=s.f,e={};
+    const req={emp_id:'กรุณากรอกรหัสพนักงาน',name:'กรุณากรอกชื่อ-นามสกุล',branch:'กรุณาเลือกสาขา',phone:'กรุณากรอกเบอร์โทร',address:'กรุณากรอกที่อยู่บ้านพัก'};
+    Object.keys(req).forEach(k=>{if(!String(f[k]||'').trim())e[k]=req[k];});
+    if(!e.phone&&!/^0\d{8,9}$/.test(f.phone.replace(/\D/g,'')))e.phone='เบอร์โทรไม่ถูกต้อง (ตัวเลข 9–10 หลัก ขึ้นต้นด้วย 0)';
+    if((this.props.requireLocation??true)&&!f.loc)e.loc='กรุณากด “ใช้ตำแหน่งปัจจุบัน” หรือเปิดแผนที่เพื่อปักหมุดบ้าน';
+    if(!f.day)e.day='กรุณาเลือกวันที่ของหลักฐาน';else if(f.day>todayISO())e.day='เลือกวันที่ในอนาคตไม่ได้';
+    const n=TYPES.reduce((a,t)=>a+s.photos[t.key].length,0);
+    if(!this.sentDays().includes(f.day)&&!s.photos.self.length)e.self='ทุกวันต้องมีรูปตัวเองคู่กับบ้านที่ท่วมอย่างน้อย 1 รูป';
+    else if(!n)e.self='กรุณาเพิ่มรูปอย่างน้อย 1 รูป';
+    if(!f.consent)e.consent='กรุณาติ๊กยินยอมก่อนส่งข้อมูล';
+    return e;}
+  submit=async()=>{const e=this.validate();
+    if(Object.keys(e).length){this.setState({err:e,sendErr:'ข้อมูลยังไม่ครบ กรุณาตรวจสอบช่องที่มีข้อความสีส้ม'});return;}
+    if(!GAS()){this.setState({err:{},sendErr:'ระบบยังไม่ได้เชื่อมต่อ กรุณาแจ้งผู้จัดการเขต'});return;}
+    const s=this.state,f=s.f,now=Date.now();
+    const all=TYPES.flatMap(t=>s.photos[t.key].map(p=>({...p,type:t.key})));
+    this.setState({err:{},sendErr:'',sending:true});
+    const photos=[];
+    for(let i=0;i<all.length;i++){const p=all[i];this.setState({progress:`กำลังเตรียมรูป ${i+1}/${all.length}…`});
+      const lines=[p.taken?`ถ่ายเมื่อ ${fmtFull(p.taken)}`:'ไม่ทราบเวลาถ่าย (รูปไม่มีข้อมูลเวลา)',`หลักฐานวันที่ ${fmtDayShort(f.day)} · ${TYPEN[p.type]}`,
+        f.loc?`ตำแหน่งบ้าน ${f.loc.lat.toFixed(6)}, ${f.loc.lng.toFixed(6)} (${f.loc.src})`:'ไม่ได้ระบุตำแหน่งบ้าน',
+        `${f.name.trim()} · รหัส ${f.emp_id.trim().toUpperCase()} · สาขา ${BRN[f.branch]||f.branch}`,`ส่งเมื่อ ${fmtFull(now)}`];
+      const r=await stamp(p.file,lines);if(r)photos.push({type:p.type,data:r.data,thumb:r.thumb,taken:p.taken||null,src:p.src||''});}
+    if(!photos.length){this.setState({sending:false,sendErr:'อ่านไฟล์รูปไม่ได้ กรุณาเลือกรูปใหม่ (รองรับ JPG/PNG)'});return;}
+    this.setState({progress:'กำลังส่งข้อมูลเข้า Drive…'});
+    const body={emp_id:f.emp_id.trim().toUpperCase(),name:f.name.trim(),position:f.position.trim(),branch:f.branch,phone:f.phone.replace(/\D/g,''),address:f.address.trim(),
+      lat:f.loc?f.loc.lat:'',lng:f.loc?f.loc.lng:'',loc_src:f.loc?f.loc.src:'',level:f.level,note:f.note.trim(),day:f.day,consent:f.consent,photos};
+    try{let r;try{r=await fetch(GAS(),{method:'POST',body:JSON.stringify(body)});}catch(x){throw new SrvErr('เชื่อมต่อระบบไม่ได้ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่');}
+      let j;try{j=await r.json();}catch(x){throw new SrvErr('ระบบตอบกลับไม่ถูกต้อง กรุณาลองใหม่ หรือแจ้งผู้จัดการเขต');}
+      if(!j.ok)throw new SrvErr(j.error||'ส่งข้อมูลไม่สำเร็จ');
+      all.forEach(p=>URL.revokeObjectURL(p.url));
+      this.mergeSent(body.emp_id,[...(j.days||[]),f.day]);
+      sessionStorage.setItem(MKEY,JSON.stringify({emp:body.emp_id,phone:body.phone}));
+      this.setState(st=>({sending:false,progress:'',view:'done',done:{...j,day:f.day},photos:emptyPhotos(),f:{...st.f,level:'',note:'',consent:false},meEmp:body.emp_id,mePhone:body.phone}));window.scrollTo(0,0);
+    }catch(x){this.setState({sending:false,progress:'',sendErr:x instanceof SrvErr?x.message:'ส่งข้อมูลไม่สำเร็จ กรุณาลองใหม่'});}};
+  sendMore=()=>{const sd=this.sentDays();let nx='';for(let i=0;i<7&&!nx;i++){const iso=isoOf(new Date(Date.now()-i*864e5));if(!sd.includes(iso))nx=iso;}
+    history.pushState(null,'',location.pathname+location.search);this.setState(s=>({view:'form',f:{...s.f,day:nx||todayISO(),consent:false},err:{},sendErr:''}));window.scrollTo(0,0);};
+  filtered(){const q=this.state.q.trim().toLowerCase(),b=this.state.fbr;
+    return this.state.cases.filter(c=>(b==='all'||c.branch===b)&&(!q||[c.name,c.employee_id,c.phone].some(v=>String(v||'').toLowerCase().includes(q))));}
+  daysOf(c){const list=String(c.days_list||'').replace(/^'/,'').split(',').map(x=>ymd(x.trim())).filter(Boolean).sort();
+    return {n:list.length,list,last:list[list.length-1]||''};}
+  groups(c){const ps=this.state.selPhotos||[],meta=Object.fromEntries((this.state.selDays||[]).map(r=>[ymd(r.day),r]));
+    let days=[...new Set([...this.daysOf(c).list,...ps.map(p=>ymd(p.day)).filter(Boolean)])].sort();
+    if(this.state.onlyDay)days=days.filter(x=>x===this.state.onlyDay);
+    return days.map(day=>{const dp=ps.filter(p=>ymd(p.day)===day),m=meta[day]||{};
+      return {title:fmtDayLong(day),count:`รูป ${dp.length} รูป`,noSelf:!!this.state.selPhotos&&!dp.some(p=>p.type==='self'),
+        meta:[m.water_level?'ระดับน้ำ: '+m.water_level:'',m.note?'รายละเอียด: '+m.note:''].filter(Boolean).join(' · '),
+        photos:dp.filter(p=>p.data).map(p=>{const tk=p.taken_at?isoOf(new Date(p.taken_at)):'';return {src:p.data,type:TYPEN[p.type]||'อื่นๆ',
+          taken:p.taken_at?'ถ่ายเมื่อ '+fmtShort(p.taken_at):'ไม่ทราบเวลาถ่าย',warn:tk&&tk!==day?'วันที่ถ่ายไม่ตรงกับวันของหลักฐาน':''};})};});}
+  popHtml(p,list){const head=`<div style="font-weight:700;font-size:20px">${p.level?'ระดับน้ำ '+esc(p.level):'ไม่ระบุระดับน้ำ'}</div>
+    <div style="font-size:16px;color:#5a534d">ล่าสุด ${p.last_day?esc(fmtDayShort(p.last_day)):'-'} · หลักฐาน ${p.days||0} วัน${p.branch?' · ใกล้สาขา '+esc(BRN[p.branch]||p.branch):''}</div>`;
+    if(!list)return `<div style="width:250px">${head}<div style="margin-top:8px;font-size:16px">กำลังโหลดรูป…</div></div>`;
+    if(!list.length)return `<div style="width:250px">${head}<div style="margin-top:8px;font-size:16px">ยังไม่มีรูประดับน้ำหรือถนน</div></div>`;
+    return `<div style="width:260px">${head}<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:8px">${list.map(t=>`<div style="position:relative"><img src="${t.t}" alt="" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;display:block"><span style="position:absolute;left:4px;bottom:2px;color:#fff;font-size:13px;text-shadow:0 1px 3px #000">${esc(fmtDayShort(t.day))}</span></div>`).join('')}</div></div>`;}
+  drawMaps(){const s=this.state;
+    if(this.fm){const k=JSON.stringify(s.f.loc);if(this.fmKey!==k){this.fmKey=k;this.fmLyr.clearLayers();BR.forEach(b=>brMarker(b).addTo(this.fmLyr));if(s.f.loc)homeMarker(s.f.loc.lat,s.f.loc.lng).bindTooltip('บ้านพัก').addTo(this.fmLyr);}}
+    if(this.am){const rows=this.filtered();const k=rows.map(c=>c.employee_id+':'+(c.photo_count||0)).join();if(this.amKey!==k){const first=this.amKey==null;this.amKey=k;this.amLyr.clearLayers();BR.forEach(b=>brMarker(b).addTo(this.amLyr));
+      const pts=[];rows.forEach(c=>{const lat=+c.lat,lng=+c.lng;if(!lat||!lng)return;pts.push([lat,lng]);
+        L.marker([lat,lng],{icon:thumbIcon(c.thumb,+c.photo_count||0,c.level)}).bindTooltip(`${c.name} · ${BRN[c.branch]||c.branch}`,{direction:'top',offset:[0,-92]}).on('click',this.openCase(String(c.employee_id))).addTo(this.amLyr);});
+      if(pts.length&&(first||s.fbr!==this.amFb)){this.am.fitBounds(L.latLngBounds([...pts,...BR.map(b=>[b.lat,b.lng])]),{padding:[40,40],maxZoom:14});}this.amFb=s.fbr;}}
+    if(this.pm){const k=s.syncedAt+':'+s.points.length;if(this.pmKey!==k){const first=!this.pmFit;this.pmKey=k;this.pmLyr.clearLayers();BR.forEach(b=>brMarker(b).addTo(this.pmLyr));
+      const pts=[];s.points.forEach(p=>{if(!p.lat||!p.lng)return;pts.push([p.lat,p.lng]);
+        const mk=L.marker([p.lat,p.lng],{icon:thumbIcon(p.thumb,p.count,p.level)}).bindPopup(this.popHtml(p,this.popCache[p.k]),{maxWidth:300});
+        mk.on('popupopen',()=>{if(this.popCache[p.k])return;this.getJ({action:'mappoint',k:p.k}).then(j=>{this.popCache[p.k]=j.thumbs||[];mk.setPopupContent(this.popHtml(p,this.popCache[p.k]));}).catch(x=>mk.setPopupContent(`<div style="width:240px">${esc(msgOf(x))}</div>`));});
+        mk.addTo(this.pmLyr);});
+      if(pts.length&&first){this.pmFit=true;this.pm.fitBounds(L.latLngBounds(pts),{padding:[60,60],maxZoom:14});}}}
+    if(this.dm){const c=s.detail;const k=c&&String(c.employee_id);if(c&&this.dmKey!==k){this.dmKey=k;this.dmLyr.clearLayers();const lat=+c.lat,lng=+c.lng;
+      const b=BR.find(x=>x.code===c.branch);if(b)brMarker(b).addTo(this.dmLyr);homeMarker(lat,lng).bindTooltip('บ้านพัก',{permanent:true,direction:'top'}).addTo(this.dmLyr);
+      if(b)this.dm.fitBounds(L.latLngBounds([[lat,lng],[b.lat,b.lng]]),{padding:[40,40],maxZoom:15});else this.dm.setView([lat,lng],15);}}}
+  renderVals(){const s=this.state,f=s.f,max=this.maxP(),v=s.view;
+    const on=Object.fromEntries(['emp_id','name','position','branch','phone','address','note','day'].map(k=>[k,e=>this.setF(k,e.target.value)]));
+    on.consent=e=>this.setF('consent',e.target.checked);
+    const sd=this.sentDays(),daySent=sd.includes(f.day);
+    const dayChips=[0,1,2,3,4,5,6].map(i=>{const dt=new Date(Date.now()-i*864e5),iso=isoOf(dt),sel=f.day===iso,snt=sd.includes(iso);
+      return {pick:()=>this.setF('day',iso),top:i===0?'วันนี้':i===1?'เมื่อวาน':dt.toLocaleDateString('th-TH',{weekday:'short'}),mid:String(dt.getDate()),
+        bot:snt?'ส่งแล้ว ✓':dt.toLocaleDateString('th-TH',{month:'short'}),bg:sel?'var(--color-accent)':snt?'var(--color-accent-2-100)':'transparent',
+        fg:sel?'#fff':snt?'var(--color-accent-2-900)':'var(--color-text)',bd:sel?'var(--color-accent)':snt?'var(--color-accent-2-700)':'var(--color-neutral-300)'};});
+    const slots=TYPES.map(t=>{const ps=s.photos[t.key];return {...t,req:t.req&&!daySent,hasPhotos:ps.length>0,canAdd:ps.length<max,countText:`${ps.length}/${max} รูป`,onCam:this.pick(t.key,true),onLib:this.pick(t.key,false),
+      photos:ps.map(p=>{const same=p.taken&&isoOf(new Date(p.taken))===f.day;return {url:p.url,remove:this.removePhoto(t.key,p.id),
+        label:p.taken?(same?fmtShort(p.taken):'ถ่ายวันอื่น '+fmtShort(p.taken)):'ไม่ทราบเวลาถ่าย',bg:same?'rgba(32,30,29,.72)':'rgba(140,73,26,.92)'};})};});
+    const levels=LEVELS.map(l=>{const a=f.level===l;return {label:l,pick:()=>this.setF('level',a?'':l),bg:a?'var(--color-accent)':'transparent',fg:a?'#fff':'var(--color-text)',bd:a?'var(--color-accent)':'var(--color-neutral-300)'};});
+    const legend=[...LEVELS.map(l=>({label:l,c:LVC[l]})),{label:'ไม่ระบุ',c:LVC['']}];
+    const empView=['form','done','melogin','me','map'].includes(v)||(v==='detail'&&s.detailFrom==='me');
+    const tabKey=v==='done'?'form':v==='melogin'||v==='detail'?'me':v;
+    const tabs=[['form','ส่งหลักฐาน',''],['me','ข้อมูลของฉัน','me'],['map','แผนที่น้ำท่วม','map']].map(([k,label,h])=>({label,go:this.go(h),bg:tabKey===k?'var(--color-accent)':'transparent',fg:tabKey===k?'#fff':'var(--color-text)'}));
+    const syncText=s.syncing?'กำลังซิงค์ข้อมูลกับ Drive…':s.syncedAt?`ซิงค์กับ Drive ล่าสุด ${fmtTime(s.syncedAt)} · อัปเดตอัตโนมัติทุก 1 นาที`:'';
+    // AM
+    const rowsC=this.filtered();
+    const rows=rowsC.map(c=>{const d=this.daysOf(c),id=String(c.employee_id);
+      return {open:this.openCase(id),name:c.name,thumb:c.thumb||'',meta:`รหัส ${id} · ${BRN[c.branch]||c.branch} · โทร ${String(c.phone||'').replace(/^'/,'')}`,last:c.last_submit?'ส่งล่าสุด '+fmtShort(c.last_submit):'',
+        days:d.n?`หลักฐาน ${d.n} วัน · ล่าสุด ${fmtDayShort(d.last)}`:'ยังไม่มีวันที่',photos:`รูป ${+c.photo_count||0} รูป`,level:c.level?'น้ำ'+c.level:'',noSelf:+c.days_no_self>0?`ขาดรูปคู่กับบ้าน ${c.days_no_self} วัน`:''};});
+    const nNoSelf=s.cases.filter(c=>+c.days_no_self>0).length,totalP=s.cases.reduce((a,c)=>a+(+c.photo_count||0),0),totalD=s.cases.reduce((a,c)=>a+(+c.days_count||0),0);
+    const brSum=BR.map(b=>{const n=s.cases.filter(c=>c.branch===b.code).length,a=s.fbr===b.code;return {n,label:`${b.name} ${n} คน`,pick:()=>this.setState({fbr:a?'all':b.code}),bg:a?'var(--color-accent-2-700)':'var(--color-surface)',fg:a?'#fff':'var(--color-text)'};}).filter(x=>x.n>0).sort((a,b)=>b.n-a.n);
+    // ME
+    let me={};if(s.me&&s.me.case){const c=s.me.case,ds=(s.me.days||[]).slice().sort((a,b)=>ymd(b.day).localeCompare(ymd(a.day)));
+      me={name:c.name,meta:`รหัส ${c.employee_id} · สาขา ${BRN[c.branch]||c.branch}`,summary:`ส่งหลักฐานแล้ว ${ds.length} วัน · รูปรวม ${+c.photo_count||0} รูป`,empty:!ds.length,
+        emptyText:ds.length?'':'ยังไม่มีหลักฐานที่ส่ง',printAll:this.openMine(''),
+        days:ds.map(r=>({title:fmtDayLong(ymd(r.day)),meta:`รูป ${+r.photo_count||0} รูป${r.water_level?' · ระดับน้ำ '+r.water_level:''}`,noSelf:!tru(r.has_self_photo),open:this.openMine(ymd(r.day))}))};}
+    // DETAIL
+    let d={};const c=s.detail;
+    if(c){const dd=this.daysOf(c),lat=+c.lat,lng=+c.lng,ps=s.selPhotos,od=s.onlyDay,groups=this.groups(c);
+      const nP=od?(ps?ps.filter(p=>ymd(p.day)===od).length:0):(ps?ps.length:(+c.photo_count||0));
+      d={isAm:s.detailFrom==='am',folder:c.folder_url||'',qr:c.folder_url?'https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=0&data='+encodeURIComponent(c.folder_url):'',
+        printed:'พิมพ์เมื่อ '+fmtFull(Date.now()),
+        info:[{k:'ชื่อ-นามสกุล',v:c.name},{k:'รหัสพนักงาน',v:String(c.employee_id)},{k:'ตำแหน่ง',v:c.position||'-'},{k:'สาขา',v:BRN[c.branch]||c.branch},{k:'เบอร์โทร',v:String(c.phone||'-').replace(/^'/,'')}],
+        rangeLabel:od?'หลักฐานของวันที่':'วันที่มาทำงานไม่ได้ (มีหลักฐานรายวัน)',days:od?fmtDayLong(od):`รวม ${dd.n} วัน`,range:od?'':dd.list.map(fmtDayShort).join(', '),
+        address:c.address||'-',hasLoc:!!(lat&&lng),locText:lat&&lng?`พิกัด ${lat.toFixed(6)}, ${lng.toFixed(6)} · ${c.loc_source||''}`:'ไม่ได้ระบุพิกัด',
+        photoTitle:`รูปหลักฐาน (${nP} รูป)`,photoMsg:s.selErr||(ps?(groups.length?'':'ยังไม่มีรูป'):'กำลังโหลดรูปจาก Drive…'),dayGroups:groups,
+        dayTabs:[{label:'ทุกวัน',k:''},...dd.list.map(x=>({label:fmtDayShort(x),k:x}))].map(t=>({label:t.label,pick:()=>this.setState({onlyDay:t.k}),bg:od===t.k?'var(--color-accent)':'var(--color-surface)',fg:od===t.k?'#fff':'var(--color-text)'})),
+        submits:`ส่งครั้งแรก ${c.first_submit?fmtShort(c.first_submit):'-'} · ส่งล่าสุด ${c.last_submit?fmtShort(c.last_submit):'-'} · ส่งทั้งหมด ${c.submit_count||1} ครั้ง`};}
+    const zb=s.zip&&(v==='list'||v==='detail')?s.zip:null;
+    return {
+      subtitle:['pin','list'].includes(v)||(v==='detail'&&s.detailFrom==='am')?'สำหรับผู้จัดการเขตและฝ่ายบุคคล':'สำหรับพนักงานที่ได้รับผลกระทบ',
+      isAmIn:v==='list'||(v==='detail'&&s.detailFrom==='am'),logout:this.logout,noGas:!GAS(),showTabs:empView,tabs,
+      showForm:v==='form',showDone:v==='done',showMeLogin:v==='melogin',showMe:v==='me'&&!!s.me,showPublicMap:v==='map',showPin:v==='pin',showList:v==='list',showDetail:v==='detail'&&!!c,
+      f,on,err:s.err,branches:BR,today:todayISO(),levels,slots,dayChips,legend,
+      dayText:f.day?`หลักฐานของ${fmtDayLong(f.day)}${daySent?' · เคยส่งวันนี้แล้ว ส่งรูปเพิ่มได้':''}`:'',
+      sentInfo:sd.length?`คุณส่งหลักฐานไปแล้ว ${sd.length} วัน (${sd.map(fmtDayShort).join(', ')}) ข้อมูลส่วนตัวกรอกไว้ให้แล้ว เลือกวันแล้วแนบรูปได้เลย`:'',
+      syncSentNow:()=>this.syncSent(),
+      fmRef:this.fmRef,amRef:this.amRef,dmRef:this.dmRef,pmRef:this.pmRef,useGps:this.useGps,gpsBtn:s.gpsState==='busy'?'กำลังหาตำแหน่ง…':'ใช้ตำแหน่งปัจจุบัน',gpsErr:s.gpsErr,
+      gpsHelp:s.geoDenied&&(!f.loc||s.gpsErr)?GEO_HELP:'',inLine:IN_LINE,extUrl:this.baseUrl()+'?openExternalBrowser=1',
+      mapOpen:!!s.mapOpen&&v==='form',openMap:this.openMap,closeMap:this.closeMap,mapBtn:f.loc?'แก้ตำแหน่งบนแผนที่':'เปิดแผนที่เพื่อปักหมุด',
+      gpsBtnShort:s.gpsState==='busy'?'กำลังหา…':'ใช้ตำแหน่งปัจจุบัน',closeMapText:f.loc?'ยืนยันตำแหน่ง':'ปิดแผนที่',
+      locText:f.loc?`ปักตำแหน่งแล้ว: ${f.loc.lat.toFixed(5)}, ${f.loc.lng.toFixed(5)} · ${f.loc.src}${f.loc.acc?` (คลาดเคลื่อน ±${Math.round(f.loc.acc)} ม.)`:''}`:'ยังไม่ได้ระบุตำแหน่ง',
+      submit:this.submit,sending:s.sending,submitText:s.sending?(s.progress||'กำลังส่ง…'):'ส่งหลักฐาน',sendErr:s.sendErr,
+      doneTitle:s.done?`ส่งหลักฐานของวันที่ ${fmtDayShort(s.done.day)} แล้ว`:'',doneDays:sd.map(fmtDayShort),
+      doneText:s.done?`รหัสพนักงาน ${s.done.ref} · ส่งรูปครั้งนี้ ${s.done.photos} รูป · วันนี้มีรูปรวม ${s.done.total_day||s.done.photos} รูป`:'',sendMore:this.sendMore,goMe:this.go('me'),goForm:this.go(''),
+      meEmp:s.meEmp,mePhone:s.mePhone,onMeEmp:e=>this.setState({meEmp:e.target.value,meErr:''}),onMePhone:e=>this.setState({mePhone:e.target.value,meErr:''}),onMeKey:e=>{if(e.key==='Enter')this.meLogin();},
+      meErr:s.meErr,meLogin:this.meLogin,meLoading:s.meLoading,meLoginText:s.meLoading?'กำลังโหลด…':'ดูข้อมูล',meLogout:this.meLogout,me,
+      mapSummary:s.points.length?`${s.points.length} จุดที่มีพนักงานแจ้งน้ำท่วม · ${syncText}`:(s.syncing?'กำลังโหลดข้อมูล…':'ยังไม่มีจุดที่แจ้งน้ำท่วม'),mapErr:s.mapErr,
+      syncNow:()=>this.sync(false),syncing:s.syncing,syncBtn:s.syncing?'กำลังซิงค์…':'ซิงค์ข้อมูลตอนนี้',syncText,
+      pin:s.pin,onPin:e=>this.setState({pin:e.target.value,pinErr:''}),onPinKey:e=>{if(e.key==='Enter')this.login();},pinErr:s.pinErr,login:this.login,loading:s.loading,loginText:s.loading?'กำลังตรวจสอบ…':'เข้าสู่ระบบ',
+      listSummary:s.cases.length?`${s.cases.length} คน · หลักฐานรวม ${totalD} วัน · รูป ${totalP} รูป${nNoSelf?` · มีวันที่ขาดรูปคู่กับบ้าน ${nNoSelf} คน`:''}`:'ยังไม่มีข้อมูล',
+      copyForm:()=>this.copy('form',this.baseUrl()+'?openExternalBrowser=1'),copyFormText:s.copied==='form'?'คัดลอกแล้ว':'คัดลอกลิงก์ฟอร์มพนักงาน',
+      copyHr:()=>this.copy('hr',this.baseUrl()+'#am'),copyHrText:s.copied==='hr'?'คัดลอกแล้ว':'คัดลอกลิงก์สำหรับ HR',
+      copyMap:()=>this.copy('map',this.baseUrl()+'?openExternalBrowser=1#map'),copyMapText:s.copied==='map'?'คัดลอกแล้ว':'คัดลอกลิงก์แผนที่น้ำท่วม',
+      zipList:()=>this.zipDl(s.fbr==='all'?{}:{branch:s.fbr},s.fbr==='all'?'ทั้งเขต':'สาขา '+BRN[s.fbr]),zipListText:s.fbr==='all'?'ดาวน์โหลดรูปทั้งเขต (ZIP)':'ดาวน์โหลดรูปสาขานี้ (ZIP)',
+      zipCase:()=>c&&this.zipDl(s.onlyDay?{emp:String(c.employee_id),day:s.onlyDay}:{emp:String(c.employee_id)},` ${c.name}${s.onlyDay?' วันที่ '+fmtDayShort(s.onlyDay):''}`),
+      zipCaseText:s.onlyDay?'ดาวน์โหลดรูปวันนี้ (ZIP)':'ดาวน์โหลดรูปทั้งหมด (ZIP)',
+      zipBar:zb,closeZip:()=>this.setState({zip:null}),copyZip:()=>s.zip&&this.copy('zip',s.zip.url),copyZipText:s.copied==='zip'?'คัดลอกแล้ว':'คัดลอกลิงก์ส่ง HR',
+      rootUrl:s.rootUrl,listErr:s.listErr,
+      q:s.q,onQ:e=>this.setState({q:e.target.value}),fbr:s.fbr,onBr:e=>this.setState({fbr:e.target.value}),brSum,
+      emptyText:s.cases.length===0?'ยังไม่มีพนักงานส่งข้อมูล คัดลอกลิงก์ฟอร์มแล้วส่งให้พนักงานในกลุ่ม LINE ได้เลย':(rows.length?'':'ไม่พบรายชื่อที่ค้นหา'),rows,
+      back:()=>this.setState({view:s.detailFrom==='me'?'me':'list',detail:null,selPhotos:null,onlyDay:''}),backText:s.detailFrom==='me'?'← กลับไปข้อมูลของฉัน':'← กลับไปรายชื่อ',
+      print:()=>{if(this.dm)this.dm.invalidateSize();setTimeout(()=>window.print(),300);},printText:s.onlyDay?'พิมพ์ / บันทึก PDF วันนี้':'พิมพ์ / บันทึก PDF',d};
+  }
+}
+</script>
+</body>
+</html>
