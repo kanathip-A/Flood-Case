@@ -23,6 +23,7 @@ h2{font-size:44px;line-height:1.15}
 .field>label{font-size:22px!important;font-weight:600}.tag{font-size:20px!important}.btn{font-size:24px!important}.input{font-size:24px!important}
 a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
 .leaflet-tooltip{font-size:20px;border-radius:10px;border:0;box-shadow:var(--shadow-md)}
+.leaflet-tooltip.br-lbl{font-size:14px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--color-text);color:var(--color-bg);box-shadow:none;white-space:nowrap}.leaflet-tooltip.br-lbl:before{display:none}
 .leaflet-popup-content-wrapper{border-radius:20px}.leaflet-popup-content{margin:12px 14px;font-size:18px;line-height:1.35}
 @media print{
   @page{size:A4;margin:10mm}
@@ -428,7 +429,7 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;defaultView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;form&quot;,&quot;me&quot;,&quot;map&quot;,&quot;am&quot;],&quot;default&quot;:&quot;form&quot;,&quot;tsType&quot;:&quot;'form'|'me'|'map'|'am'&quot;},&quot;maxPerType&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;min&quot;:1,&quot;max&quot;:10,&quot;default&quot;:3,&quot;tsType&quot;:&quot;number&quot;},&quot;requireLocation&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
-const BR=[['FPR','ฟิวเจอร์พาร์ครังสิต',13.9902097,100.616539],['BU','ม.กรุงเทพ',14.0409154,100.6129333],['TU','ม.ธรรมศาสตร์',14.0657516,100.6056416],['ACP','อยุธยา ซิตี้ปาร์ค',14.3372821,100.6093961],['CAY','เซ็นทรัล อยุธยา',14.3315127,100.6112829],['MVR','มาร์เก็ตวิลเลจ รังสิต',14.0004481,100.6847768],['SMA','สายไหม อเวนิว',13.9205044,100.6805034],['YCR','ยิ่งเจริญ สแควร์',13.8965994,100.6086939],['ZR','เซียร์รังสิต',13.9611771,100.6221438]].map(([code,name,lat,lng])=>({code,name,lat,lng}));
+const BR=[['FPR','ฟิวเจอร์พาร์ครังสิต',13.9902097,100.616539,'Future Park Rangsit'],['BU','ม.กรุงเทพ',14.0409154,100.6129333,'Bangkok University'],['TU','ม.ธรรมศาสตร์',14.0657516,100.6056416,'Thammasat University'],['ACP','อยุธยา ซิตี้ปาร์ค',14.3372821,100.6093961,'Ayutthaya City Park'],['CAY','เซ็นทรัล อยุธยา',14.3315127,100.6112829,'Central Ayutthaya'],['MVR','มาร์เก็ตวิลเลจ รังสิต',14.0004481,100.6847768,'Market Village Rangsit'],['SMA','สายไหม อเวนิว',13.9205044,100.6805034,'Saimai Avenue'],['YCR','ยิ่งเจริญ สแควร์',13.8965994,100.6086939,'Yingcharoen Square'],['ZR','เซียร์รังสิต',13.9611771,100.6221438,'Zeer Rangsit']].map(([code,name,lat,lng,en])=>({code,name,lat,lng,en}));
 const BRN=Object.fromEntries(BR.map(b=>[b.code,b.name]));
 const TYPES=[
   {key:'self',label:'ตัวเองคู่กับบ้านที่ท่วม',req:true,hint:'ให้เห็นหน้าตัวเองและบ้านพักที่มีน้ำท่วมอยู่ในภาพเดียวกัน'},
@@ -491,7 +492,7 @@ function stamp(file,lines){return new Promise(res=>{const url=URL.createObjectUR
     URL.revokeObjectURL(url);res({data:c.toDataURL('image/jpeg',0.85),thumb:tc.toDataURL('image/jpeg',0.6)});};
   img.onerror=()=>{URL.revokeObjectURL(url);res(null);};img.src=url;});}
 function mkMap(el){const m=L.map(el,{scrollWheelZoom:false}).setView([14.08,100.63],10);L.tileLayer(TILE,{maxZoom:19,attribution:ATTR}).addTo(m);setTimeout(()=>m.invalidateSize(),250);return m;}
-const brMarker=b=>L.circleMarker([b.lat,b.lng],{radius:7,color:'#201e1d',weight:3,fillColor:'#f5ead8',fillOpacity:1}).bindTooltip('สาขา '+b.name);
+const brMarker=b=>L.circleMarker([b.lat,b.lng],{radius:7,color:'#201e1d',weight:3,fillColor:'#f5ead8',fillOpacity:1}).bindTooltip(b.code,{permanent:true,direction:'right',offset:[8,0],className:'br-lbl'});
 const homeMarker=(lat,lng)=>L.circleMarker([lat,lng],{radius:10,color:'#8c491a',weight:3,fillColor:'#c67139',fillOpacity:.9});
 function thumbIcon(thumb,count,level){const c=LVC[level||'']||LVC[''];
   const inner=thumb?`<img src="${thumb}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:14px;display:block">`
