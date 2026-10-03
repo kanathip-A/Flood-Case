@@ -26,10 +26,10 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
 .leaflet-tooltip.br-lbl{font-size:14px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--color-text);color:var(--color-bg);box-shadow:none;white-space:nowrap}.leaflet-tooltip.br-lbl:before{display:none}
 .leaflet-popup-content-wrapper{border-radius:20px}.leaflet-popup-content{margin:12px 14px;font-size:18px;line-height:1.35}
 @media print{
-  @page{size:A4;margin:1in}
+  @page{size:A4;margin:1in 0}
   body{background:#fff;font-size:19px}
   [data-noprint]{display:none!important}
-  [data-print-doc]{box-shadow:none!important;max-width:none!important;width:auto!important;margin:0!important;padding:0!important;border-radius:0!important;background:#fff!important}
+  [data-print-doc]{box-shadow:none!important;max-width:none!important;width:auto!important;margin:0!important;padding:0 1in!important;box-sizing:border-box!important;border-radius:0!important;background:#fff!important}
   [data-print-doc] figure,[data-print-doc] section,[data-pdf-row]{break-inside:avoid}
   [data-print-doc]{gap:14px!important}
   [data-print-doc] h2{font-size:28px!important}
@@ -754,7 +754,10 @@ class Component extends DCLogic{
       q:s.q,onQ:e=>this.setState({q:e.target.value}),fbr:s.fbr,onBr:e=>this.setState({fbr:e.target.value}),brSum,
       emptyText:s.cases.length===0?'ยังไม่มีพนักงานส่งข้อมูล คัดลอกลิงก์ฟอร์มแล้วส่งให้พนักงานในกลุ่ม LINE ได้เลย':(rows.length?'':'ไม่พบรายชื่อที่ค้นหา'),rows,
       back:()=>this.setState({view:s.detailFrom==='me'?'me':'list',detail:null,selPhotos:null,onlyDay:''}),backText:s.detailFrom==='me'?'← กลับไปข้อมูลของฉัน':'← กลับไปรายชื่อ',
-      print:()=>{if(this.dm)this.dm.invalidateSize();setTimeout(()=>window.print(),300);},printText:s.onlyDay?'พิมพ์ / บันทึก PDF วันนี้':'พิมพ์ / บันทึก PDF',d};
+      print:()=>{if(this.dm)this.dm.invalidateSize();const c=s.detail||{},t0=document.title;
+        const fn=[c.branch,c.employee_id,c.name,s.onlyDay||''].map(x=>String(x||'').trim().replace(/[\\/:*?"<>|]+/g,'-')).filter(Boolean).join('_');
+        if(fn)document.title=fn;const back=()=>{document.title=t0;window.removeEventListener('afterprint',back);};window.addEventListener('afterprint',back);
+        setTimeout(()=>{window.print();setTimeout(back,1500);},300);},printText:s.onlyDay?'พิมพ์ / บันทึก PDF วันนี้':'พิมพ์ / บันทึก PDF',d};
   }
 }
 </script>
