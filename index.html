@@ -30,7 +30,17 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
   body{background:#fff;font-size:19px}
   [data-noprint]{display:none!important}
   [data-print-doc]{box-shadow:none!important;max-width:none!important;width:auto!important;margin:0!important;padding:0!important;border-radius:0!important;background:#fff!important}
-  [data-print-doc] figure,[data-print-doc] section{break-inside:avoid}
+  [data-print-doc] figure,[data-print-doc] section,[data-pdf-row]{break-inside:avoid}
+  [data-print-doc]{gap:14px!important}
+  [data-print-doc] h2{font-size:28px!important}
+  [data-print-doc] h3{font-size:20px!important}
+  [data-print-doc] [data-pdf-row]{grid-template-columns:1fr 1fr!important;gap:12px!important}
+  [data-print-doc] [data-pdf-row] section{padding:12px 16px!important}
+  [data-print-doc] [data-pdf-map]{aspect-ratio:auto!important;height:62mm!important}
+  [data-print-doc] [data-pdf-photos]{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
+  [data-print-doc] [data-pdf-photos] figure>div{aspect-ratio:auto!important;height:68mm!important;border-radius:8px!important}
+  [data-print-doc] figcaption{font-size:12px!important;line-height:1.3!important}
+  [data-print-doc] img[alt="QR โฟลเดอร์รูป"]{width:28mm!important;height:28mm!important}
   .leaflet-control-zoom{display:none}
 }
 </style>
@@ -379,24 +389,28 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
           </div>
         </sc-if>
       </section>
+      <div data-pdf-row="1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px;align-items:stretch">
       <section style="display:flex;flex-direction:column;gap:10px">
         <h3 style="margin:0;font-size:30px">ข้อมูลพนักงาน</h3>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px 28px">
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 20px">
           <sc-for list="{{ d.info }}" as="i" hint-placeholder-count="5">
-            <div style="display:flex;flex-direction:column"><span style="font-size:19px;color:var(--color-neutral-700)">{{ i.k }}</span><span style="font-size:25px;font-weight:600">{{ i.v }}</span></div>
+            <div style="display:flex;flex-direction:column"><span style="font-size:19px;color:var(--color-neutral-700)">{{ i.k }}</span><span style="font-size:25px;font-weight:600;overflow-wrap:anywhere">{{ i.v }}</span></div>
           </sc-for>
         </div>
       </section>
-      <section style="display:flex;flex-direction:column;gap:8px;background:var(--color-accent-100);border-radius:var(--radius-lg);padding:20px 24px">
+      <section style="display:flex;flex-direction:column;justify-content:center;gap:8px;background:var(--color-accent-100);border-radius:var(--radius-lg);padding:20px 24px">
         <span style="font-size:19px;color:var(--color-accent-900)">{{ d.rangeLabel }}</span>
         <span style="font-size:30px;font-weight:700;color:var(--color-accent-900);line-height:1.25">{{ d.days }}</span>
         <sc-if value="{{ d.range }}"><span style="font-size:23px;color:var(--color-accent-900);text-wrap:pretty">{{ d.range }}</span></sc-if>
       </section>
-      <section style="display:flex;flex-direction:column;gap:10px">
-        <h3 style="margin:0;font-size:30px">บ้านพัก</h3>
-        <div style="font-size:24px">{{ d.address }}</div>
-        <div style="font-size:21px;color:var(--color-neutral-700)">{{ d.locText }}</div>
-        <sc-if value="{{ d.hasLoc }}"><div ref="{{ dmRef }}" style="height:280px;border-radius:var(--radius-lg);overflow:hidden;background:var(--color-neutral-100)"></div></sc-if>
+      </div>
+      <section data-pdf-row="1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px;align-items:start">
+        <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+          <h3 style="margin:0;font-size:30px">บ้านพัก</h3>
+          <div style="font-size:24px;text-wrap:pretty">{{ d.address }}</div>
+          <div style="font-size:21px;color:var(--color-neutral-700);overflow-wrap:anywhere">{{ d.locText }}</div>
+        </div>
+        <sc-if value="{{ d.hasLoc }}"><div ref="{{ dmRef }}" data-pdf-map="1" style="width:100%;aspect-ratio:4/3;border-radius:var(--radius-lg);overflow:hidden;background:var(--color-neutral-100)"></div></sc-if>
       </section>
       <section style="display:flex;flex-direction:column;gap:14px">
         <h3 style="margin:0;font-size:30px">{{ d.photoTitle }}</h3>
@@ -409,11 +423,11 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
               <sc-if value="{{ g.noSelf }}"><span class="tag tag-accent">ไม่มีรูปคู่กับบ้าน</span></sc-if>
             </div>
             <sc-if value="{{ g.meta }}"><div style="font-size:22px;text-wrap:pretty">{{ g.meta }}</div></sc-if>
-            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:14px">
+            <div data-pdf-photos="1" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr));gap:14px">
               <sc-for list="{{ g.photos }}" as="p">
-                <figure style="margin:0;display:flex;flex-direction:column;gap:6px">
-                  <img src="{{ p.src }}" alt="{{ p.type }}" style="width:100%;border-radius:14px;display:block;background:var(--color-neutral-100)">
-                  <figcaption style="font-size:20px;line-height:1.35"><strong>{{ p.type }}</strong> · {{ p.taken }}<sc-if value="{{ p.warn }}"><span style="display:block;color:var(--color-accent-800)">{{ p.warn }}</span></sc-if></figcaption>
+                <figure style="margin:0;display:flex;flex-direction:column;gap:6px;min-width:0">
+                  <div style="aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:var(--color-neutral-100);display:grid;place-items:center"><img src="{{ p.src }}" alt="{{ p.type }}" style="max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain;display:block"></div>
+                  <figcaption style="font-size:20px;line-height:1.35;overflow-wrap:anywhere"><strong>{{ p.type }}</strong> · {{ p.taken }}<sc-if value="{{ p.warn }}"><span style="display:block;color:var(--color-accent-800)">{{ p.warn }}</span></sc-if></figcaption>
                 </figure>
               </sc-for>
             </div>
