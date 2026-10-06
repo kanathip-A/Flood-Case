@@ -327,9 +327,9 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
         <button class="btn btn-ghost" onClick="{{ copyMap }}">{{ copyMapText }}</button>
       </div>
       <sc-if value="{{ listErr }}"><div style="background:var(--color-accent-100);color:var(--color-accent-900);border-radius:var(--radius-lg);padding:12px 18px;font-size:22px">{{ listErr }}</div></sc-if>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:24px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:24px">
         <div style="display:flex;flex-direction:column;gap:10px">
-          <div ref="{{ amRef }}" style="height:min(620px,60vh);border-radius:var(--radius-lg);overflow:hidden;background:var(--color-neutral-100)"></div>
+          <div ref="{{ amRef }}" style="width:100%;aspect-ratio:16/9;max-height:70vh;min-height:320px;border-radius:var(--radius-lg);overflow:hidden;background:var(--color-neutral-100)"></div>
           <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
             <sc-for list="{{ legend }}" as="l" hint-placeholder-count="6"><span style="display:flex;align-items:center;gap:6px;font-size:19px"><span style="width:16px;height:16px;border-radius:5px;background:{{ l.c }}"></span>{{ l.label }}</span></sc-for>
           </div>
@@ -338,7 +338,7 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <sc-for list="{{ brSum }}" as="b" hint-placeholder-count="0"><button type="button" onClick="{{ b.pick }}" style="border:0;border-radius:999px;padding:4px 16px;font-size:21px;cursor:pointer;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button></sc-for>
           </div>
-          <div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:10px">
+          <div style="display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:10px">
             <input class="input" placeholder="ค้นหาชื่อ รหัส หรือเบอร์โทร" value="{{ q }}" onChange="{{ onQ }}">
             <select class="input" value="{{ fbr }}" onChange="{{ onBr }}">
               <option value="all">ทุกสาขา</option>
@@ -346,6 +346,7 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
             </select>
           </div>
           <sc-if value="{{ emptyText }}"><div style="background:var(--color-surface);border-radius:var(--radius-lg);padding:28px;font-size:23px;color:var(--color-neutral-700);text-wrap:pretty">{{ emptyText }}</div></sc-if>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,460px),1fr));gap:12px">
           <sc-for list="{{ rows }}" as="r" hint-placeholder-count="0">
             <button onClick="{{ r.open }}" style="text-align:left;border:0;background:var(--color-surface);border-radius:var(--radius-lg);padding:14px 16px;display:flex;gap:14px;align-items:center;cursor:pointer;color:inherit;font-size:inherit" style-hover="background:var(--color-accent-100)">
               <sc-if value="{{ r.thumb }}"><img src="{{ r.thumb }}" alt="" style="width:72px;height:72px;border-radius:16px;object-fit:cover;flex:none"></sc-if>
@@ -361,6 +362,7 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
               </span>
             </button>
           </sc-for>
+          </div>
         </div>
       </div>
     </main>
