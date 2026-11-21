@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,34 +10,35 @@
 <helmet>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="ds/styles.css">
+<link rel="stylesheet" href="theme.css">
 <script src="ds/ds-bundle.js"></script>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="config.js"></script>
 <style>
-:root{--font-heading:"TH Sarabun New","Sarabun",sans-serif;--font-heading-weight:700;--font-body:"TH Sarabun New","Sarabun",sans-serif}
-body{margin:0;background:var(--color-bg);font-family:var(--font-body);font-size:25px;line-height:1.5;color:var(--color-text)}
+:root{--font-heading:"IBM Plex Sans Thai",sans-serif;--font-heading-weight:600;--font-body:"IBM Plex Sans Thai",sans-serif}
+body{margin:0;background:var(--color-bg);font-family:var(--font-body);font-size:18px;line-height:1.6;color:var(--color-text)}
 body *{font-family:var(--font-body)!important}
-h2{font-size:44px;line-height:1.15}
-.field>label{font-size:22px!important;font-weight:600}.tag{font-size:20px!important}.btn{font-size:24px!important}.input{font-size:24px!important}
-a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
-.leaflet-tooltip{font-size:20px;border-radius:10px;border:0;box-shadow:var(--shadow-md)}
-.leaflet-tooltip.br-lbl{font-size:14px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--color-text);color:var(--color-bg);box-shadow:none;white-space:nowrap}.leaflet-tooltip.br-lbl:before{display:none}
-.leaflet-popup-content-wrapper{border-radius:20px}.leaflet-popup-content{margin:12px 14px;font-size:18px;line-height:1.35}
+h2{font-size:33px;line-height:1.15}
+.field>label{font-size:16px!important;font-weight:600}.tag{font-size:15px!important}.btn{font-size:18px!important}.input{font-size:18px!important}
+a{color:var(--water-700)}a:hover{color:var(--color-text)}
+.leaflet-tooltip{font-size:15px;border-radius:var(--radius-md);border:0;box-shadow:var(--shadow-md)}
+.leaflet-tooltip.br-lbl{font-size:12px;font-weight:700;padding:2px 8px;border-radius:var(--radius-pill);background:var(--color-text);color:var(--color-bg);box-shadow:none;white-space:nowrap}.leaflet-tooltip.br-lbl:before{display:none}
+.leaflet-popup-content-wrapper{border-radius:var(--radius-lg)}.leaflet-popup-content{margin:12px 14px;font-size:14px;line-height:1.35}
 @media print{
   @page{size:A4;margin:1in 0}
-  body{background:#fff;font-size:19px}
+  body{background:#fff;font-size:14px}
   [data-noprint]{display:none!important}
   [data-print-doc]{box-shadow:none!important;max-width:none!important;width:auto!important;margin:0!important;padding:0 1in!important;box-sizing:border-box!important;border-radius:0!important;background:#fff!important}
   [data-print-doc] figure,[data-print-doc] section,[data-pdf-row]{break-inside:avoid}
   [data-print-doc]{gap:14px!important}
-  [data-print-doc] h2{font-size:28px!important}
-  [data-print-doc] h3{font-size:20px!important}
+  [data-print-doc] h2{font-size:21px!important}
+  [data-print-doc] h3{font-size:15px!important}
   [data-print-doc] [data-pdf-row]{grid-template-columns:1fr 1fr!important;gap:12px!important}
   [data-print-doc] [data-pdf-row] section{padding:12px 16px!important}
   [data-print-doc] [data-pdf-home]{grid-template-columns:1fr!important;gap:8px!important}
-  [data-print-doc] [data-pdf-map]{aspect-ratio:auto!important;height:112mm!important;border-radius:10px!important}
+  [data-print-doc] [data-pdf-map]{aspect-ratio:auto!important;height:112mm!important;border-radius:var(--radius-md)!important}
   [data-print-doc] [data-pdf-photopage]{break-before:page;break-inside:auto!important}
   [data-print-doc] [data-pdf-photopage] section{break-inside:auto!important}
   [data-print-doc] [data-pdf-photos]{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
@@ -52,31 +53,31 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
 
 <div style="min-height:100vh;display:flex;flex-direction:column">
   <header data-noprint="1" style="display:flex;align-items:center;gap:14px;padding:20px 20px 12px;max-width:1200px;width:100%;margin:0 auto;box-sizing:border-box">
-    <div style="width:46px;height:46px;border-radius:50%;background:var(--color-accent-2-300);flex:none"></div>
+    <div aria-hidden="true" style="width:48px;height:48px;border-radius:var(--radius-md);background:var(--color-text);display:grid;place-items:center;flex:none;box-shadow:var(--shadow-sm)"><svg width="28" height="28" viewBox="0 0 256 256" fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"><path d="M128 28c-30 38-56 70-56 104a56 56 0 0 0 112 0c0-34-26-66-56-104Z" stroke="#7fb6dc"/><path d="M32 196c24-20 48-20 72 0s48 20 72 0 36-14 48-8"/></svg></div>
     <div style="flex:1;min-width:0">
-      <div style="font-weight:700;font-size:clamp(26px,6.5vw,30px);line-height:1.15;text-wrap:balance">รวบรวมหลักฐานพนักงานประสบภัยน้ำท่วม</div>
-      <div style="font-size:21px;color:var(--color-neutral-700)">{{ subtitle }}</div>
+      <div style="font-weight:700;font-size:clamp(20px,6.5vw,23px);line-height:1.15;text-wrap:balance">รวบรวมหลักฐานพนักงานประสบภัยน้ำท่วม</div>
+      <div style="font-size:16px;color:var(--color-neutral-700)">{{ subtitle }}</div>
     </div>
     <sc-if value="{{ isAmIn }}"><button class="btn btn-ghost" onClick="{{ logout }}">ออกจากระบบ</button></sc-if>
   </header>
 
   <sc-if value="{{ showTabs }}" hint-placeholder-val="{{ true }}">
     <nav data-noprint="1" style="width:100%;max-width:640px;margin:0 auto;padding:0 20px 8px;box-sizing:border-box">
-      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;background:var(--color-surface);border-radius:999px;padding:6px">
-        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3"><button type="button" onClick="{{ t.go }}" style="border:0;cursor:pointer;border-radius:999px;padding:8px 4px;font-size:21px;font-weight:600;line-height:1.2;min-height:48px;background:{{ t.bg }};color:{{ t.fg }}">{{ t.label }}</button></sc-for>
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;background:var(--color-surface);border-radius:var(--radius-pill);padding:6px">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3"><button type="button" onClick="{{ t.go }}" style="border:0;cursor:pointer;border-radius:var(--radius-pill);padding:8px 4px;font-size:16px;font-weight:600;line-height:1.2;min-height:48px;background:{{ t.bg }};color:{{ t.fg }}">{{ t.label }}</button></sc-for>
       </div>
     </nav>
   </sc-if>
 
   <sc-if value="{{ noGas }}">
     <div data-noprint="1" style="max-width:1200px;width:100%;margin:0 auto;padding:0 20px 8px;box-sizing:border-box">
-      <div style="background:var(--color-accent-100);color:var(--color-accent-900);border-radius:var(--radius-lg);padding:14px 20px;font-size:22px">ยังไม่ได้เชื่อมต่อ Google Apps Script — ใส่ URL ของ Web App ในไฟล์ config.js ก่อนส่งลิงก์ให้พนักงาน</div>
+      <div style="background:var(--color-accent-100);color:var(--color-accent-900);border-radius:var(--radius-lg);padding:14px 20px;font-size:17px">ยังไม่ได้เชื่อมต่อ Google Apps Script — ใส่ URL ของ Web App ในไฟล์ config.js ก่อนส่งลิงก์ให้พนักงาน</div>
     </div>
   </sc-if>
 
   <sc-if value="{{ zipBar }}">
     <div data-noprint="1" style="max-width:1200px;width:100%;margin:0 auto;padding:0 20px 8px;box-sizing:border-box">
-      <div style="background:var(--color-accent-2-100);color:var(--color-accent-2-900);border-radius:var(--radius-lg);padding:14px 20px;font-size:22px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <div style="background:var(--color-accent-2-100);color:var(--color-accent-2-900);border-radius:var(--radius-lg);padding:14px 20px;font-size:17px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
         <span style="flex:1;min-width:220px;text-wrap:pretty">{{ zipBar.text }}</span>
         <sc-if value="{{ zipBar.url }}"><a class="btn btn-primary" href="{{ zipBar.url }}" download="{{ zipBar.name }}" style="text-decoration:none">ดาวน์โหลด ZIP</a></sc-if>
         <button class="btn btn-ghost" onClick="{{ closeZip }}" aria-label="ปิด">ปิด</button>
@@ -88,25 +89,25 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
     <main style="width:100%;max-width:640px;margin:0 auto;padding:12px 20px 80px;box-sizing:border-box;display:flex;flex-direction:column;gap:24px">
       <sc-if value="{{ inLine }}">
         <div style="background:var(--color-accent-100);border-radius:var(--radius-lg);padding:16px 20px;display:flex;flex-direction:column;gap:10px">
-          <span style="font-size:22px;color:var(--color-accent-900);text-wrap:pretty">คุณเปิดลิงก์จากในแอป LINE ซึ่งอาจใช้ตำแหน่งและกล้องได้ไม่เต็มที่ แนะนำให้เปิดในเบราว์เซอร์ของโทรศัพท์</span>
+          <span style="font-size:17px;color:var(--color-accent-900);text-wrap:pretty">คุณเปิดลิงก์จากในแอป LINE ซึ่งอาจใช้ตำแหน่งและกล้องได้ไม่เต็มที่ แนะนำให้เปิดในเบราว์เซอร์ของโทรศัพท์</span>
           <a class="btn btn-primary" href="{{ extUrl }}" style="align-self:flex-start;text-decoration:none">เปิดในเบราว์เซอร์</a>
         </div>
       </sc-if>
-      <p style="margin:0;font-size:24px;text-wrap:pretty">ส่งรูปหลักฐานทุกวันที่มาทำงานไม่ได้เพราะน้ำท่วม เพื่อประกอบการขอความช่วยเหลือจากฝ่ายบุคคล รูปต้องแสดงให้เห็นชัดว่าได้รับความเดือดร้อนจริง เช่น รูปตัวเองคู่กับบ้านพักที่น้ำท่วม</p>
+      <p style="margin:0;font-size:18px;text-wrap:pretty">ส่งรูปหลักฐานทุกวันที่มาทำงานไม่ได้เพราะน้ำท่วม เพื่อประกอบการขอความช่วยเหลือจากฝ่ายบุคคล รูปต้องแสดงให้เห็นชัดว่าได้รับความเดือดร้อนจริง เช่น รูปตัวเองคู่กับบ้านพักที่น้ำท่วม</p>
       <sc-if value="{{ sentInfo }}">
-        <div style="background:var(--color-accent-2-100);color:var(--color-accent-2-900);border-radius:var(--radius-lg);padding:16px 20px;font-size:22px;text-wrap:pretty">{{ sentInfo }}</div>
+        <div style="background:var(--color-accent-2-100);color:var(--color-accent-2-900);border-radius:var(--radius-lg);padding:16px 20px;font-size:17px;text-wrap:pretty">{{ sentInfo }}</div>
       </sc-if>
 
-      <section style="background:var(--color-surface);border-radius:var(--radius-lg);padding:clamp(18px,5vw,24px);display:flex;flex-direction:column;gap:18px">
-        <div style="display:flex;align-items:center;gap:12px"><span style="width:40px;height:40px;border-radius:50%;background:var(--color-accent);color:#fff;display:grid;place-items:center;font-weight:700;flex:none">1</span><h3 style="margin:0;font-size:32px">ข้อมูลพนักงาน</h3></div>
+      <section style="background:var(--color-surface);border-radius:var(--radius-lg);border:1px solid var(--color-divider);box-shadow:var(--shadow-sm);padding:clamp(18px,5vw,24px);display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:40px;height:40px;border-radius:var(--radius-md);background:var(--color-text);color:#fff;display:grid;place-items:center;font-weight:600;flex:none">1</span><h3 style="margin:0;font-size:24px">ข้อมูลพนักงาน</h3></div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
           <div class="field"><label>รหัสพนักงาน *</label><input class="input" value="{{ f.emp_id }}" onChange="{{ on.emp_id }}" onBlur="{{ syncSentNow }}" autocomplete="off">
-            <sc-if value="{{ err.emp_id }}"><div style="color:var(--color-accent-800);font-size:21px">{{ err.emp_id }}</div></sc-if></div>
+            <sc-if value="{{ err.emp_id }}"><div style="color:var(--color-danger);font-weight:500;font-size:16px">{{ err.emp_id }}</div></sc-if></div>
           <div class="field"><label>เบอร์โทร *</label><input class="input" type="tel" inputmode="tel" value="{{ f.phone }}" onChange="{{ on.phone }}" onBlur="{{ syncSentNow }}">
-            <sc-if value="{{ err.phone }}"><div style="color:var(--color-accent-800);font-size:21px">{{ err.phone }}</div></sc-if></div>
+            <sc-if value="{{ err.phone }}"><div style="color:var(--color-danger);font-weight:500;font-size:16px">{{ err.phone }}</div></sc-if></div>
         </div>
         <div class="field"><label>ชื่อ-นามสกุล *</label><input class="input" value="{{ f.name }}" onChange="{{ on.name }}">
-          <sc-if value="{{ err.name }}"><div style="color:var(--color-accent-800);font-size:21px">{{ err.name }}</div></sc-if></div>
+          <sc-if value="{{ err.name }}"><div style="color:var(--color-danger);font-weight:500;font-size:16px">{{ err.name }}</div></sc-if></div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
           <div class="field"><label>ตำแหน่ง</label><input class="input" value="{{ f.position }}" onChange="{{ on.position }}"></div>
           <div class="field"><label>สาขา *</label>
@@ -114,69 +115,69 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
               <option value="">เลือกสาขา</option>
               <sc-for list="{{ branches }}" as="b" hint-placeholder-count="9"><option value="{{ b.code }}">{{ b.name }}</option></sc-for>
             </select>
-            <sc-if value="{{ err.branch }}"><div style="color:var(--color-accent-800);font-size:21px">{{ err.branch }}</div></sc-if></div>
+            <sc-if value="{{ err.branch }}"><div style="color:var(--color-danger);font-weight:500;font-size:16px">{{ err.branch }}</div></sc-if></div>
         </div>
       </section>
 
-      <section style="background:var(--color-surface);border-radius:var(--radius-lg);padding:clamp(18px,5vw,24px);display:flex;flex-direction:column;gap:18px">
-        <div style="display:flex;align-items:center;gap:12px"><span style="width:40px;height:40px;border-radius:50%;background:var(--color-accent);color:#fff;display:grid;place-items:center;font-weight:700;flex:none">2</span><h3 style="margin:0;font-size:32px">บ้านพักที่น้ำท่วม</h3></div>
-        <div class="field"><label>ที่อยู่ (บ้านเลขที่ ซอย ตำบล อำเภอ จังหวัด) *</label><textarea class="input" rows="2" value="{{ f.address }}" onChange="{{ on.address }}" style="border-radius:24px;resize:vertical"></textarea>
-          <sc-if value="{{ err.address }}"><div style="color:var(--color-accent-800);font-size:21px">{{ err.address }}</div></sc-if></div>
+      <section style="background:var(--color-surface);border-radius:var(--radius-lg);border:1px solid var(--color-divider);box-shadow:var(--shadow-sm);padding:clamp(18px,5vw,24px);display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:40px;height:40px;border-radius:var(--radius-md);background:var(--color-text);color:#fff;display:grid;place-items:center;font-weight:600;flex:none">2</span><h3 style="margin:0;font-size:24px">บ้านพักที่น้ำท่วม</h3></div>
+        <div class="field"><label>ที่อยู่ (บ้านเลขที่ ซอย ตำบล อำเภอ จังหวัด) *</label><textarea class="input" rows="2" value="{{ f.address }}" onChange="{{ on.address }}" style="border-radius:var(--radius-lg);resize:vertical"></textarea>
+          <sc-if value="{{ err.address }}"><div style="color:var(--color-danger);font-weight:500;font-size:16px">{{ err.address }}</div></sc-if></div>
         <div style="display:flex;flex-direction:column;gap:10px">
-          <div style="font-size:22px;font-weight:600">ตำแหน่งบ้านบนแผนที่ *</div>
+          <div style="font-size:17px;font-weight:600">ตำแหน่งบ้านบนแผนที่ *</div>
           <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
             <button type="button" class="btn btn-secondary" onClick="{{ useGps }}">{{ gpsBtn }}</button>
-            <span style="font-size:21px;color:var(--color-neutral-700);flex:1;min-width:200px">ถ้าตอนนี้ไม่ได้อยู่ที่บ้าน ให้เปิดแผนที่แล้วปักหมุดบ้านแทน</span>
+            <span style="font-size:16px;color:var(--color-neutral-700);flex:1;min-width:200px">ถ้าตอนนี้ไม่ได้อยู่ที่บ้าน ให้เปิดแผนที่แล้วปักหมุดบ้านแทน</span>
           </div>
           <button type="button" class="btn btn-ghost" onClick="{{ openMap }}" style="align-self:flex-start">{{ mapBtn }}</button>
-          <div style="font-size:21px;color:var(--color-neutral-800)">{{ locText }}</div>
-          <sc-if value="{{ gpsErr }}"><div style="color:var(--color-accent-800);font-size:21px">{{ gpsErr }}</div></sc-if>
-          <sc-if value="{{ gpsHelp }}"><div style="background:var(--color-accent-2-100);color:var(--color-accent-2-900);border-radius:16px;padding:10px 14px;font-size:20px;text-wrap:pretty">{{ gpsHelp }}</div></sc-if>
-          <sc-if value="{{ err.loc }}"><div style="color:var(--color-accent-800);font-size:21px">{{ err.loc }}</div></sc-if>
+          <div style="font-size:16px;color:var(--color-neutral-800)">{{ locText }}</div>
+          <sc-if value="{{ gpsErr }}"><div style="color:var(--color-danger);font-weight:500;font-size:16px">{{ gpsErr }}</div></sc-if>
+          <sc-if value="{{ gpsHelp }}"><div style="background:var(--color-accent-2-100);color:var(--color-accent-2-900);border-radius:var(--radius-md);padding:10px 14px;font-size:15px;text-wrap:pretty">{{ gpsHelp }}</div></sc-if>
+          <sc-if value="{{ err.loc }}"><div style="color:var(--color-danger);font-weight:500;font-size:16px">{{ err.loc }}</div></sc-if>
         </div>
       </section>
 
-      <section style="background:var(--color-surface);border-radius:var(--radius-lg);padding:clamp(18px,5vw,24px);display:flex;flex-direction:column;gap:18px">
-        <div style="display:flex;align-items:center;gap:12px"><span style="width:40px;height:40px;border-radius:50%;background:var(--color-accent);color:#fff;display:grid;place-items:center;font-weight:700;flex:none">3</span><h3 style="margin:0;font-size:32px">วันที่ของหลักฐาน</h3></div>
-        <div style="font-size:21px;color:var(--color-neutral-700);text-wrap:pretty">ส่งทีละวัน ทุกวันที่มาทำงานไม่ได้ต้องมีรูปหลักฐานของวันนั้น เลือกวันย้อนหลังได้</div>
+      <section style="background:var(--color-surface);border-radius:var(--radius-lg);border:1px solid var(--color-divider);box-shadow:var(--shadow-sm);padding:clamp(18px,5vw,24px);display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:40px;height:40px;border-radius:var(--radius-md);background:var(--color-text);color:#fff;display:grid;place-items:center;font-weight:600;flex:none">3</span><h3 style="margin:0;font-size:24px">วันที่ของหลักฐาน</h3></div>
+        <div style="font-size:16px;color:var(--color-neutral-700);text-wrap:pretty">ส่งทีละวัน ทุกวันที่มาทำงานไม่ได้ต้องมีรูปหลักฐานของวันนั้น เลือกวันย้อนหลังได้</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px">
           <sc-for list="{{ dayChips }}" as="c" hint-placeholder-count="7">
-            <button type="button" onClick="{{ c.pick }}" style="border-radius:16px;padding:6px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.2;border:2px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }}">
-              <span style="font-size:19px">{{ c.top }}</span><strong style="font-size:28px">{{ c.mid }}</strong><span style="font-size:18px">{{ c.bot }}</span>
+            <button type="button" onClick="{{ c.pick }}" style="border-radius:var(--radius-md);padding:6px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.2;border:2px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }}">
+              <span style="font-size:14px">{{ c.top }}</span><strong style="font-size:21px">{{ c.mid }}</strong><span style="font-size:14px">{{ c.bot }}</span>
             </button>
           </sc-for>
         </div>
         <div class="field"><label>หรือเลือกวันที่เก่ากว่านี้</label><input class="input" type="date" max="{{ today }}" value="{{ f.day }}" onChange="{{ on.day }}">
-          <sc-if value="{{ err.day }}"><div style="color:var(--color-accent-800);font-size:21px">{{ err.day }}</div></sc-if></div>
-        <sc-if value="{{ dayText }}"><div style="font-size:26px;font-weight:700;color:var(--color-accent-800);line-height:1.3">{{ dayText }}</div></sc-if>
+          <sc-if value="{{ err.day }}"><div style="color:var(--color-danger);font-weight:500;font-size:16px">{{ err.day }}</div></sc-if></div>
+        <sc-if value="{{ dayText }}"><div style="font-size:20px;font-weight:700;color:var(--color-accent-800);line-height:1.3">{{ dayText }}</div></sc-if>
         <div style="display:flex;flex-direction:column;gap:10px">
-          <div style="font-size:22px;font-weight:600">ระดับน้ำที่บ้านวันนั้น</div>
+          <div style="font-size:17px;font-weight:600">ระดับน้ำที่บ้านวันนั้น</div>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <sc-for list="{{ levels }}" as="lv" hint-placeholder-count="5"><button type="button" onClick="{{ lv.pick }}" style="border-radius:999px;padding:6px 20px;font-size:23px;cursor:pointer;border:2px solid {{ lv.bd }};background:{{ lv.bg }};color:{{ lv.fg }}">{{ lv.label }}</button></sc-for>
+            <sc-for list="{{ levels }}" as="lv" hint-placeholder-count="5"><button type="button" onClick="{{ lv.pick }}" style="border-radius:var(--radius-pill);padding:6px 20px;font-size:17px;cursor:pointer;border:2px solid {{ lv.bd }};background:{{ lv.bg }};color:{{ lv.fg }}">{{ lv.label }}</button></sc-for>
           </div>
         </div>
-        <div class="field"><label>สาเหตุที่มาทำงานไม่ได้ / ความเสียหาย</label><textarea class="input" rows="3" value="{{ f.note }}" onChange="{{ on.note }}" placeholder="เช่น ถนนเข้าหมู่บ้านถูกตัดขาด ไม่มีรถโดยสาร" style="border-radius:24px;resize:vertical"></textarea></div>
+        <div class="field"><label>สาเหตุที่มาทำงานไม่ได้ / ความเสียหาย</label><textarea class="input" rows="3" value="{{ f.note }}" onChange="{{ on.note }}" placeholder="เช่น ถนนเข้าหมู่บ้านถูกตัดขาด ไม่มีรถโดยสาร" style="border-radius:var(--radius-lg);resize:vertical"></textarea></div>
       </section>
 
-      <section style="background:var(--color-surface);border-radius:var(--radius-lg);padding:clamp(18px,5vw,24px);display:flex;flex-direction:column;gap:18px">
-        <div style="display:flex;align-items:center;gap:12px"><span style="width:40px;height:40px;border-radius:50%;background:var(--color-accent);color:#fff;display:grid;place-items:center;font-weight:700;flex:none">4</span><h3 style="margin:0;font-size:32px">รูปหลักฐาน</h3></div>
-        <div style="font-size:21px;color:var(--color-neutral-700);text-wrap:pretty">ใช้รูปที่ถ่ายในวันที่เลือก ถ้าวันในรูปไม่ตรงกับวันที่เลือก ระบบจะขึ้นป้ายเตือนสีส้ม ระบบจะประทับวันเวลาที่ถ่ายจริงจากข้อมูลในรูป ตำแหน่งบ้าน และชื่อของคุณลงบนรูปให้อัตโนมัติ ถ้ารูปไม่มีข้อมูลเวลา จะประทับว่า “ไม่ทราบเวลาถ่าย”</div>
+      <section style="background:var(--color-surface);border-radius:var(--radius-lg);border:1px solid var(--color-divider);box-shadow:var(--shadow-sm);padding:clamp(18px,5vw,24px);display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:center;gap:12px"><span style="width:40px;height:40px;border-radius:var(--radius-md);background:var(--color-text);color:#fff;display:grid;place-items:center;font-weight:600;flex:none">4</span><h3 style="margin:0;font-size:24px">รูปหลักฐาน</h3></div>
+        <div style="font-size:16px;color:var(--color-neutral-700);text-wrap:pretty">ใช้รูปที่ถ่ายในวันที่เลือก ถ้าวันในรูปไม่ตรงกับวันที่เลือก ระบบจะขึ้นป้ายเตือนสีส้ม ระบบจะประทับวันเวลาที่ถ่ายจริงจากข้อมูลในรูป ตำแหน่งบ้าน และชื่อของคุณลงบนรูปให้อัตโนมัติ ถ้ารูปไม่มีข้อมูลเวลา จะประทับว่า “ไม่ทราบเวลาถ่าย”</div>
         <div style="display:flex;flex-direction:column;gap:14px">
           <sc-for list="{{ slots }}" as="s" hint-placeholder-count="5">
             <div style="border-radius:var(--radius-lg);background:var(--color-bg);padding:clamp(14px,4vw,18px);display:flex;flex-direction:column;gap:12px">
               <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-                <strong style="font-size:26px;line-height:1.2">{{ s.label }}</strong>
+                <strong style="font-size:20px;line-height:1.2">{{ s.label }}</strong>
                 <sc-if value="{{ s.req }}"><span class="tag tag-accent">บังคับ</span></sc-if>
-                <span style="margin-left:auto;font-size:21px;color:var(--color-neutral-700)">{{ s.countText }}</span>
+                <span style="margin-left:auto;font-size:16px;color:var(--color-neutral-700)">{{ s.countText }}</span>
               </div>
-              <div style="font-size:21px;color:var(--color-neutral-700);text-wrap:pretty">{{ s.hint }}</div>
+              <div style="font-size:16px;color:var(--color-neutral-700);text-wrap:pretty">{{ s.hint }}</div>
               <sc-if value="{{ s.hasPhotos }}">
                 <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
                   <sc-for list="{{ s.photos }}" as="p">
-                    <div style="position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:var(--color-neutral-200)">
+                    <div style="position:relative;aspect-ratio:1;border-radius:var(--radius-md);overflow:hidden;background:var(--color-neutral-200)">
                       <img src="{{ p.url }}" alt="" style="width:100%;height:100%;object-fit:cover;display:block">
-                      <div style="position:absolute;left:6px;right:6px;bottom:6px;border-radius:10px;padding:2px 8px;font-size:18px;line-height:1.3;background:{{ p.bg }};color:#fff">{{ p.label }}</div>
-                      <button type="button" onClick="{{ p.remove }}" aria-label="ลบรูป" style="position:absolute;top:6px;right:6px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(32,30,29,.72);color:#fff;font-size:26px;line-height:1;cursor:pointer">×</button>
+                      <div style="position:absolute;left:6px;right:6px;bottom:6px;border-radius:var(--radius-md);padding:2px 8px;font-size:14px;line-height:1.3;background:{{ p.bg }};color:#fff">{{ p.label }}</div>
+                      <button type="button" onClick="{{ p.remove }}" aria-label="ลบรูป" style="position:absolute;top:6px;right:6px;width:40px;height:40px;border-radius:50%;border:0;background:rgba(32,30,29,.72);color:#fff;font-size:20px;line-height:1;cursor:pointer">×</button>
                     </div>
                   </sc-for>
                 </div>
@@ -190,30 +191,30 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
             </div>
           </sc-for>
         </div>
-        <sc-if value="{{ err.self }}"><div style="color:var(--color-accent-800);font-size:21px">{{ err.self }}</div></sc-if>
+        <sc-if value="{{ err.self }}"><div style="color:var(--color-danger);font-weight:500;font-size:16px">{{ err.self }}</div></sc-if>
       </section>
 
       <section style="display:flex;flex-direction:column;gap:14px">
-        <label style="display:flex;gap:14px;align-items:flex-start;font-size:22px;cursor:pointer;text-wrap:pretty">
+        <label style="display:flex;gap:14px;align-items:flex-start;font-size:17px;cursor:pointer;text-wrap:pretty">
           <input type="checkbox" checked="{{ f.consent }}" onChange="{{ on.consent }}" style="width:26px;height:26px;margin-top:6px;accent-color:var(--color-accent);flex:none">
           <span>ข้าพเจ้ายินยอมให้ผู้จัดการเขตและฝ่ายบุคคลเก็บและใช้ข้อมูลและรูปถ่ายนี้ เพื่อพิจารณาการช่วยเหลือกรณีน้ำท่วม และยินยอมให้แสดงรูประดับน้ำและถนน (ไม่มีชื่อ) บนแผนที่น้ำท่วมให้เพื่อนพนักงานเห็น พร้อมยืนยันว่าข้อมูลเป็นความจริง</span>
         </label>
-        <sc-if value="{{ err.consent }}"><div style="color:var(--color-accent-800);font-size:21px">{{ err.consent }}</div></sc-if>
-        <sc-if value="{{ sendErr }}"><div style="background:var(--color-accent-100);color:var(--color-accent-900);border-radius:var(--radius-lg);padding:12px 18px;font-size:22px">{{ sendErr }}</div></sc-if>
+        <sc-if value="{{ err.consent }}"><div style="color:var(--color-danger);font-weight:500;font-size:16px">{{ err.consent }}</div></sc-if>
+        <sc-if value="{{ sendErr }}"><div style="background:var(--color-accent-100);color:var(--color-accent-900);border-radius:var(--radius-lg);padding:12px 18px;font-size:17px">{{ sendErr }}</div></sc-if>
         <button type="button" class="btn btn-primary btn-block" onClick="{{ submit }}" disabled="{{ sending }}" style="min-height:60px">{{ submitText }}</button>
       </section>
 
       <sc-if value="{{ mapOpen }}">
         <div style="position:fixed;inset:0;z-index:1000;background:var(--color-bg);display:flex;flex-direction:column">
           <div style="padding:14px 20px;display:flex;flex-direction:column;gap:4px">
-            <strong style="font-size:27px;line-height:1.2">ปักหมุดบ้านพัก</strong>
-            <span style="font-size:21px;color:var(--color-neutral-700)">เลื่อนแผนที่ไปที่บ้านของคุณ แล้วแตะตรงตำแหน่งบ้าน</span>
+            <strong style="font-size:21px;line-height:1.2">ปักหมุดบ้านพัก</strong>
+            <span style="font-size:16px;color:var(--color-neutral-700)">เลื่อนแผนที่ไปที่บ้านของคุณ แล้วแตะตรงตำแหน่งบ้าน</span>
           </div>
           <div ref="{{ fmRef }}" style="flex:1;min-height:0;background:var(--color-neutral-100)"></div>
           <div style="padding:12px 20px 20px;display:flex;flex-direction:column;gap:10px">
-            <div style="font-size:21px;color:var(--color-neutral-800)">{{ locText }}</div>
-            <sc-if value="{{ gpsErr }}"><div style="color:var(--color-accent-800);font-size:21px">{{ gpsErr }}</div></sc-if>
-            <sc-if value="{{ gpsHelp }}"><div style="background:var(--color-accent-2-100);color:var(--color-accent-2-900);border-radius:16px;padding:10px 14px;font-size:20px;text-wrap:pretty">{{ gpsHelp }}</div></sc-if>
+            <div style="font-size:16px;color:var(--color-neutral-800)">{{ locText }}</div>
+            <sc-if value="{{ gpsErr }}"><div style="color:var(--color-danger);font-weight:500;font-size:16px">{{ gpsErr }}</div></sc-if>
+            <sc-if value="{{ gpsHelp }}"><div style="background:var(--color-accent-2-100);color:var(--color-accent-2-900);border-radius:var(--radius-md);padding:10px 14px;font-size:15px;text-wrap:pretty">{{ gpsHelp }}</div></sc-if>
             <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px">
               <button type="button" class="btn btn-secondary" onClick="{{ useGps }}">{{ gpsBtnShort }}</button>
               <button type="button" class="btn btn-primary" onClick="{{ closeMap }}">{{ closeMapText }}</button>
@@ -226,17 +227,17 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
 
   <sc-if value="{{ showDone }}">
     <main style="width:100%;max-width:640px;margin:0 auto;padding:12px 20px 80px;box-sizing:border-box">
-      <div style="background:var(--color-surface);border-radius:var(--radius-lg);padding:clamp(20px,5vw,32px);display:flex;flex-direction:column;gap:16px;align-items:flex-start">
-        <div style="width:72px;height:72px;border-radius:50%;background:var(--color-accent-2-300);display:grid;place-items:center;font-size:40px;color:var(--color-accent-2-900)">✓</div>
+      <div style="background:var(--color-surface);border-radius:var(--radius-lg);border:1px solid var(--color-divider);box-shadow:var(--shadow-sm);padding:clamp(20px,5vw,32px);display:flex;flex-direction:column;gap:16px;align-items:flex-start">
+        <div style="width:72px;height:72px;border-radius:50%;background:var(--color-accent-2-300);display:grid;place-items:center;font-size:30px;color:var(--color-accent-2-900)">✓</div>
         <h2 style="margin:0;text-wrap:balance">{{ doneTitle }}</h2>
-        <div style="font-size:24px">{{ doneText }}</div>
+        <div style="font-size:18px">{{ doneText }}</div>
         <div style="display:flex;flex-direction:column;gap:6px">
-          <div style="font-size:21px;color:var(--color-neutral-700)">วันที่ส่งหลักฐานแล้ว</div>
+          <div style="font-size:16px;color:var(--color-neutral-700)">วันที่ส่งหลักฐานแล้ว</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <sc-for list="{{ doneDays }}" as="dd" hint-placeholder-count="1"><span class="tag tag-accent-2">{{ dd }}</span></sc-for>
           </div>
         </div>
-        <div style="font-size:22px;color:var(--color-neutral-700);text-wrap:pretty">ทุกวันที่ยังมาทำงานไม่ได้ ให้เปิดลิงก์นี้แล้วส่งหลักฐานของวันนั้น ถ้าลืมส่งวันไหน ส่งย้อนหลังได้</div>
+        <div style="font-size:17px;color:var(--color-neutral-700);text-wrap:pretty">ทุกวันที่ยังมาทำงานไม่ได้ ให้เปิดลิงก์นี้แล้วส่งหลักฐานของวันนั้น ถ้าลืมส่งวันไหน ส่งย้อนหลังได้</div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <button class="btn btn-primary" onClick="{{ sendMore }}">ส่งหลักฐานวันอื่น</button>
           <button class="btn btn-secondary" onClick="{{ goMe }}">ดูข้อมูลของฉัน / PDF</button>
@@ -247,12 +248,12 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
 
   <sc-if value="{{ showMeLogin }}">
     <main style="width:100%;max-width:640px;margin:0 auto;padding:12px 20px 80px;box-sizing:border-box">
-      <div style="background:var(--color-surface);border-radius:var(--radius-lg);padding:clamp(20px,5vw,32px);display:flex;flex-direction:column;gap:18px">
+      <div style="background:var(--color-surface);border-radius:var(--radius-lg);border:1px solid var(--color-divider);box-shadow:var(--shadow-sm);padding:clamp(20px,5vw,32px);display:flex;flex-direction:column;gap:18px">
         <h2 style="margin:0">ดูข้อมูลของฉัน</h2>
-        <div style="font-size:22px;color:var(--color-neutral-700);text-wrap:pretty">ใส่รหัสพนักงานและเบอร์โทรที่ใช้ตอนส่งหลักฐาน เพื่อดูและพิมพ์ PDF ของแต่ละวัน</div>
+        <div style="font-size:17px;color:var(--color-neutral-700);text-wrap:pretty">ใส่รหัสพนักงานและเบอร์โทรที่ใช้ตอนส่งหลักฐาน เพื่อดูและพิมพ์ PDF ของแต่ละวัน</div>
         <div class="field"><label>รหัสพนักงาน</label><input class="input" autocomplete="off" value="{{ meEmp }}" onChange="{{ onMeEmp }}"></div>
         <div class="field"><label>เบอร์โทร</label><input class="input" type="tel" inputmode="tel" value="{{ mePhone }}" onChange="{{ onMePhone }}" onKeyDown="{{ onMeKey }}"></div>
-        <sc-if value="{{ meErr }}"><div style="color:var(--color-accent-800);font-size:22px">{{ meErr }}</div></sc-if>
+        <sc-if value="{{ meErr }}"><div style="color:var(--color-danger);font-weight:500;font-size:17px">{{ meErr }}</div></sc-if>
         <button class="btn btn-primary btn-block" onClick="{{ meLogin }}" disabled="{{ meLoading }}">{{ meLoginText }}</button>
       </div>
     </main>
@@ -260,25 +261,25 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
 
   <sc-if value="{{ showMe }}">
     <main style="width:100%;max-width:640px;margin:0 auto;padding:12px 20px 80px;box-sizing:border-box;display:flex;flex-direction:column;gap:18px">
-      <div style="background:var(--color-surface);border-radius:var(--radius-lg);padding:clamp(18px,5vw,24px);display:flex;flex-direction:column;gap:10px">
-        <div style="font-size:21px;color:var(--color-neutral-700)">{{ me.meta }}</div>
-        <h2 style="margin:0;font-size:38px">{{ me.name }}</h2>
-        <div style="font-size:24px;font-weight:600;color:var(--color-accent-800)">{{ me.summary }}</div>
+      <div style="background:var(--color-surface);border-radius:var(--radius-lg);border:1px solid var(--color-divider);box-shadow:var(--shadow-sm);padding:clamp(18px,5vw,24px);display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:16px;color:var(--color-neutral-700)">{{ me.meta }}</div>
+        <h2 style="margin:0;font-size:29px">{{ me.name }}</h2>
+        <div style="font-size:18px;font-weight:600;color:var(--color-accent-800)">{{ me.summary }}</div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <button class="btn btn-primary" onClick="{{ me.printAll }}" disabled="{{ me.empty }}">พิมพ์ PDF ทุกวัน</button>
           <button class="btn btn-ghost" onClick="{{ meLogout }}">ไม่ใช่ฉัน</button>
         </div>
-        <div style="font-size:19px;color:var(--color-neutral-700)">{{ syncText }}</div>
+        <div style="font-size:14px;color:var(--color-neutral-700)">{{ syncText }}</div>
       </div>
-      <sc-if value="{{ me.emptyText }}"><div style="background:var(--color-surface);border-radius:var(--radius-lg);padding:24px;font-size:23px;color:var(--color-neutral-700)">{{ me.emptyText }}</div></sc-if>
+      <sc-if value="{{ me.emptyText }}"><div style="background:var(--color-surface);border-radius:var(--radius-lg);border:1px solid var(--color-divider);box-shadow:var(--shadow-sm);padding:24px;font-size:17px;color:var(--color-neutral-700)">{{ me.emptyText }}</div></sc-if>
       <sc-for list="{{ me.days }}" as="dy" hint-placeholder-count="0">
-        <button onClick="{{ dy.open }}" style="text-align:left;border:0;background:var(--color-surface);border-radius:var(--radius-lg);padding:16px 20px;display:flex;gap:14px;align-items:center;cursor:pointer;color:inherit;font-size:inherit" style-hover="background:var(--color-accent-100)">
+        <button onClick="{{ dy.open }}" style="text-align:left;border:0;background:var(--color-surface);border-radius:var(--radius-lg);border:1px solid var(--color-divider);box-shadow:var(--shadow-sm);padding:16px 20px;display:flex;gap:14px;align-items:center;cursor:pointer;color:inherit;font-size:inherit" style-hover="background:var(--color-accent-100)">
           <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px">
-            <strong style="font-size:26px;line-height:1.2">{{ dy.title }}</strong>
-            <span style="font-size:21px;color:var(--color-neutral-800)">{{ dy.meta }}</span>
+            <strong style="font-size:20px;line-height:1.2">{{ dy.title }}</strong>
+            <span style="font-size:16px;color:var(--color-neutral-800)">{{ dy.meta }}</span>
             <sc-if value="{{ dy.noSelf }}"><span class="tag tag-accent" style="align-self:flex-start">ไม่มีรูปคู่กับบ้าน</span></sc-if>
           </span>
-          <span style="font-size:21px;font-weight:600;color:var(--color-accent-700);flex:none">ดู / PDF ›</span>
+          <span style="font-size:16px;font-weight:600;color:var(--color-accent-700);flex:none">ดู / PDF ›</span>
         </button>
       </sc-for>
     </main>
@@ -287,26 +288,26 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
   <sc-if value="{{ showPublicMap }}">
     <main style="width:100%;max-width:1200px;margin:0 auto;padding:4px 20px 40px;box-sizing:border-box;display:flex;flex-direction:column;gap:12px">
       <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
-        <div style="flex:1;min-width:240px"><h2 style="margin:0">แผนที่น้ำท่วม</h2><div style="font-size:21px;color:var(--color-neutral-700)">{{ mapSummary }}</div></div>
+        <div style="flex:1;min-width:240px"><h2 style="margin:0">แผนที่น้ำท่วม</h2><div style="font-size:16px;color:var(--color-neutral-700)">{{ mapSummary }}</div></div>
         <button class="btn btn-ghost" onClick="{{ syncNow }}" disabled="{{ syncing }}">{{ syncBtn }}</button>
       </div>
       <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
-        <span style="font-size:20px;color:var(--color-neutral-700)">ระดับน้ำ</span>
-        <sc-for list="{{ legend }}" as="l" hint-placeholder-count="6"><span style="display:flex;align-items:center;gap:6px;font-size:20px"><span style="width:18px;height:18px;border-radius:6px;background:{{ l.c }}"></span>{{ l.label }}</span></sc-for>
+        <span style="font-size:15px;color:var(--color-neutral-700)">ระดับน้ำ</span>
+        <sc-for list="{{ legend }}" as="l" hint-placeholder-count="6"><span style="display:flex;align-items:center;gap:6px;font-size:15px"><span style="width:18px;height:18px;border-radius:6px;background:{{ l.c }}"></span>{{ l.label }}</span></sc-for>
       </div>
-      <sc-if value="{{ mapErr }}"><div style="background:var(--color-accent-100);color:var(--color-accent-900);border-radius:var(--radius-lg);padding:12px 18px;font-size:22px">{{ mapErr }}</div></sc-if>
+      <sc-if value="{{ mapErr }}"><div style="background:var(--color-accent-100);color:var(--color-accent-900);border-radius:var(--radius-lg);padding:12px 18px;font-size:17px">{{ mapErr }}</div></sc-if>
       <div ref="{{ pmRef }}" style="height:max(420px,calc(100vh - 300px));border-radius:var(--radius-lg);overflow:hidden;background:var(--color-neutral-100)"></div>
-      <div style="font-size:19px;color:var(--color-neutral-700);text-wrap:pretty">แตะรูปบนแผนที่เพื่อดูรูประดับน้ำและถนนของจุดนั้น แสดงเฉพาะรูประดับน้ำและถนน ไม่แสดงชื่อพนักงาน ตำแหน่งเป็นค่าประมาณ (รัศมีราว 100 เมตร)</div>
+      <div style="font-size:14px;color:var(--color-neutral-700);text-wrap:pretty">แตะรูปบนแผนที่เพื่อดูรูประดับน้ำและถนนของจุดนั้น แสดงเฉพาะรูประดับน้ำและถนน ไม่แสดงชื่อพนักงาน ตำแหน่งเป็นค่าประมาณ (รัศมีราว 100 เมตร)</div>
     </main>
   </sc-if>
 
   <sc-if value="{{ showPin }}">
     <main style="width:100%;max-width:520px;margin:0 auto;padding:40px 20px 80px;box-sizing:border-box">
-      <div style="background:var(--color-surface);border-radius:var(--radius-lg);padding:32px;display:flex;flex-direction:column;gap:18px">
+      <div style="background:var(--color-surface);border-radius:var(--radius-lg);border:1px solid var(--color-divider);box-shadow:var(--shadow-sm);padding:32px;display:flex;flex-direction:column;gap:18px">
         <h2 style="margin:0">สำหรับผู้จัดการเขต / HR</h2>
-        <div style="font-size:22px;color:var(--color-neutral-700)">AM และ HR ใช้ PIN เดียวกัน เพื่อดูข้อมูล พิมพ์ PDF และดาวน์โหลดรูป</div>
+        <div style="font-size:17px;color:var(--color-neutral-700)">AM และ HR ใช้ PIN เดียวกัน เพื่อดูข้อมูล พิมพ์ PDF และดาวน์โหลดรูป</div>
         <div class="field"><label>รหัส PIN</label><input class="input" type="password" inputmode="numeric" autocomplete="off" value="{{ pin }}" onChange="{{ onPin }}" onKeyDown="{{ onPinKey }}"></div>
-        <sc-if value="{{ pinErr }}"><div style="color:var(--color-accent-800);font-size:22px">{{ pinErr }}</div></sc-if>
+        <sc-if value="{{ pinErr }}"><div style="color:var(--color-danger);font-weight:500;font-size:17px">{{ pinErr }}</div></sc-if>
         <button class="btn btn-primary btn-block" onClick="{{ login }}" disabled="{{ loading }}">{{ loginText }}</button>
         <button class="btn btn-ghost" onClick="{{ goForm }}" style="align-self:flex-start">กลับไปหน้าฟอร์มพนักงาน</button>
       </div>
@@ -316,7 +317,7 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
   <sc-if value="{{ showList }}">
     <main style="width:100%;max-width:1200px;margin:0 auto;padding:12px 20px 60px;box-sizing:border-box;display:flex;flex-direction:column;gap:20px">
       <div style="display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap">
-        <div style="flex:1;min-width:260px"><h2 style="margin:0">พนักงานที่ส่งหลักฐาน</h2><div style="font-size:22px;color:var(--color-neutral-700)">{{ listSummary }}</div><div style="font-size:19px;color:var(--color-neutral-700)">{{ syncText }}</div></div>
+        <div style="flex:1;min-width:260px"><h2 style="margin:0">พนักงานที่ส่งหลักฐาน</h2><div style="font-size:17px;color:var(--color-neutral-700)">{{ listSummary }}</div><div style="font-size:14px;color:var(--color-neutral-700)">{{ syncText }}</div></div>
         <button class="btn btn-primary" onClick="{{ zipList }}">{{ zipListText }}</button>
         <sc-if value="{{ rootUrl }}"><a class="btn btn-secondary" href="{{ rootUrl }}" target="_blank" rel="noopener" style="text-decoration:none">เปิดโฟลเดอร์ Drive</a></sc-if>
         <button class="btn btn-ghost" onClick="{{ syncNow }}" disabled="{{ syncing }}">{{ syncBtn }}</button>
@@ -326,17 +327,17 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
         <button class="btn btn-ghost" onClick="{{ copyHr }}">{{ copyHrText }}</button>
         <button class="btn btn-ghost" onClick="{{ copyMap }}">{{ copyMapText }}</button>
       </div>
-      <sc-if value="{{ listErr }}"><div style="background:var(--color-accent-100);color:var(--color-accent-900);border-radius:var(--radius-lg);padding:12px 18px;font-size:22px">{{ listErr }}</div></sc-if>
+      <sc-if value="{{ listErr }}"><div style="background:var(--color-accent-100);color:var(--color-accent-900);border-radius:var(--radius-lg);padding:12px 18px;font-size:17px">{{ listErr }}</div></sc-if>
       <div style="display:flex;flex-direction:column;gap:24px">
         <div style="display:flex;flex-direction:column;gap:10px">
           <div ref="{{ amRef }}" style="width:100%;aspect-ratio:16/9;max-height:70vh;min-height:320px;border-radius:var(--radius-lg);overflow:hidden;background:var(--color-neutral-100)"></div>
           <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
-            <sc-for list="{{ legend }}" as="l" hint-placeholder-count="6"><span style="display:flex;align-items:center;gap:6px;font-size:19px"><span style="width:16px;height:16px;border-radius:5px;background:{{ l.c }}"></span>{{ l.label }}</span></sc-for>
+            <sc-for list="{{ legend }}" as="l" hint-placeholder-count="6"><span style="display:flex;align-items:center;gap:6px;font-size:14px"><span style="width:16px;height:16px;border-radius:5px;background:{{ l.c }}"></span>{{ l.label }}</span></sc-for>
           </div>
         </div>
         <div style="display:flex;flex-direction:column;gap:12px">
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <sc-for list="{{ brSum }}" as="b" hint-placeholder-count="0"><button type="button" onClick="{{ b.pick }}" style="border:0;border-radius:999px;padding:4px 16px;font-size:21px;cursor:pointer;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button></sc-for>
+            <sc-for list="{{ brSum }}" as="b" hint-placeholder-count="0"><button type="button" onClick="{{ b.pick }}" style="border:0;border-radius:var(--radius-pill);padding:4px 16px;font-size:16px;cursor:pointer;background:{{ b.bg }};color:{{ b.fg }}">{{ b.label }}</button></sc-for>
           </div>
           <div style="display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:10px">
             <input class="input" placeholder="ค้นหาชื่อ รหัส หรือเบอร์โทร" value="{{ q }}" onChange="{{ onQ }}">
@@ -345,14 +346,14 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
               <sc-for list="{{ branches }}" as="b"><option value="{{ b.code }}">{{ b.name }}</option></sc-for>
             </select>
           </div>
-          <sc-if value="{{ emptyText }}"><div style="background:var(--color-surface);border-radius:var(--radius-lg);padding:28px;font-size:23px;color:var(--color-neutral-700);text-wrap:pretty">{{ emptyText }}</div></sc-if>
+          <sc-if value="{{ emptyText }}"><div style="background:var(--color-surface);border-radius:var(--radius-lg);border:1px solid var(--color-divider);box-shadow:var(--shadow-sm);padding:28px;font-size:17px;color:var(--color-neutral-700);text-wrap:pretty">{{ emptyText }}</div></sc-if>
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,460px),1fr));gap:12px">
           <sc-for list="{{ rows }}" as="r" hint-placeholder-count="0">
-            <button onClick="{{ r.open }}" style="text-align:left;border:0;background:var(--color-surface);border-radius:var(--radius-lg);padding:14px 16px;display:flex;gap:14px;align-items:center;cursor:pointer;color:inherit;font-size:inherit" style-hover="background:var(--color-accent-100)">
-              <sc-if value="{{ r.thumb }}"><img src="{{ r.thumb }}" alt="" style="width:72px;height:72px;border-radius:16px;object-fit:cover;flex:none"></sc-if>
+            <button onClick="{{ r.open }}" style="text-align:left;border:0;background:var(--color-surface);border-radius:var(--radius-lg);border:1px solid var(--color-divider);box-shadow:var(--shadow-sm);padding:14px 16px;display:flex;gap:14px;align-items:center;cursor:pointer;color:inherit;font-size:inherit" style-hover="background:var(--color-accent-100)">
+              <sc-if value="{{ r.thumb }}"><img src="{{ r.thumb }}" alt="" style="width:72px;height:72px;border-radius:var(--radius-md);object-fit:cover;flex:none"></sc-if>
               <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
-                <span style="display:flex;gap:12px;align-items:baseline;flex-wrap:wrap"><strong style="font-size:27px;line-height:1.2;flex:1;min-width:0">{{ r.name }}</strong><span style="font-size:20px;color:var(--color-neutral-700)">{{ r.last }}</span></span>
-                <span style="font-size:22px;color:var(--color-neutral-800)">{{ r.meta }}</span>
+                <span style="display:flex;gap:12px;align-items:baseline;flex-wrap:wrap"><strong style="font-size:21px;line-height:1.2;flex:1;min-width:0">{{ r.name }}</strong><span style="font-size:15px;color:var(--color-neutral-700)">{{ r.last }}</span></span>
+                <span style="font-size:17px;color:var(--color-neutral-800)">{{ r.meta }}</span>
                 <span style="display:flex;gap:8px;flex-wrap:wrap">
                   <span class="tag tag-accent-2">{{ r.days }}</span>
                   <span class="tag tag-neutral">{{ r.photos }}</span>
@@ -379,68 +380,68 @@ a{color:var(--color-accent-700)}a:hover{color:var(--color-accent-800)}
       <button class="btn btn-primary" onClick="{{ print }}">{{ printText }}</button>
     </div>
     <div data-noprint="1" style="width:100%;max-width:900px;margin:0 auto;padding:0 20px 14px;box-sizing:border-box;display:flex;gap:8px;flex-wrap:wrap">
-      <sc-for list="{{ d.dayTabs }}" as="t" hint-placeholder-count="0"><button type="button" onClick="{{ t.pick }}" style="border:0;border-radius:999px;padding:4px 16px;font-size:21px;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }}">{{ t.label }}</button></sc-for>
+      <sc-for list="{{ d.dayTabs }}" as="t" hint-placeholder-count="0"><button type="button" onClick="{{ t.pick }}" style="border:0;border-radius:var(--radius-pill);padding:4px 16px;font-size:16px;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }}">{{ t.label }}</button></sc-for>
     </div>
-    <article data-print-doc="1" style="width:calc(100% - 40px);max-width:900px;margin:0 auto 60px;background:var(--color-surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:clamp(20px,5vw,40px);box-sizing:border-box;display:flex;flex-direction:column;gap:28px">
+    <article data-print-doc="1" style="width:calc(100% - 40px);max-width:900px;margin:0 auto 60px;background:var(--color-surface);border-radius:var(--radius-lg);border:1px solid var(--color-divider);box-shadow:var(--shadow-sm);box-shadow:var(--shadow-md);padding:clamp(20px,5vw,40px);box-sizing:border-box;display:flex;flex-direction:column;gap:28px">
       <section style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">
         <div style="flex:1;min-width:240px;display:flex;flex-direction:column;gap:4px">
-          <div style="font-size:21px;color:var(--color-neutral-700)">หลักฐานประกอบการขอความช่วยเหลือ</div>
+          <div style="font-size:16px;color:var(--color-neutral-700)">หลักฐานประกอบการขอความช่วยเหลือ</div>
           <h2 style="margin:0">พนักงานประสบภัยน้ำท่วม</h2>
-          <div style="font-size:22px;color:var(--color-neutral-700)">{{ d.printed }}</div>
+          <div style="font-size:17px;color:var(--color-neutral-700)">{{ d.printed }}</div>
         </div>
         <sc-if value="{{ d.qr }}">
           <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
             <img src="{{ d.qr }}" alt="QR โฟลเดอร์รูป" style="width:130px;height:130px;display:block">
-            <div style="font-size:18px;color:var(--color-neutral-700)">สแกนเปิดโฟลเดอร์รูป</div>
+            <div style="font-size:14px;color:var(--color-neutral-700)">สแกนเปิดโฟลเดอร์รูป</div>
           </div>
         </sc-if>
       </section>
       <div data-pdf-row="1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px;align-items:stretch">
       <section style="display:flex;flex-direction:column;gap:10px">
-        <h3 style="margin:0;font-size:30px">ข้อมูลพนักงาน</h3>
+        <h3 style="margin:0;font-size:23px">ข้อมูลพนักงาน</h3>
         <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 20px">
           <sc-for list="{{ d.info }}" as="i" hint-placeholder-count="5">
-            <div style="display:flex;flex-direction:column"><span style="font-size:19px;color:var(--color-neutral-700)">{{ i.k }}</span><span style="font-size:25px;font-weight:600;overflow-wrap:anywhere">{{ i.v }}</span></div>
+            <div style="display:flex;flex-direction:column"><span style="font-size:14px;color:var(--color-neutral-700)">{{ i.k }}</span><span style="font-size:19px;font-weight:600;overflow-wrap:anywhere">{{ i.v }}</span></div>
           </sc-for>
         </div>
       </section>
       <section style="display:flex;flex-direction:column;justify-content:center;gap:8px;background:var(--color-accent-100);border-radius:var(--radius-lg);padding:20px 24px">
-        <span style="font-size:19px;color:var(--color-accent-900)">{{ d.rangeLabel }}</span>
-        <span style="font-size:30px;font-weight:700;color:var(--color-accent-900);line-height:1.25">{{ d.days }}</span>
-        <sc-if value="{{ d.range }}"><span style="font-size:23px;color:var(--color-accent-900);text-wrap:pretty">{{ d.range }}</span></sc-if>
+        <span style="font-size:14px;color:var(--color-accent-900)">{{ d.rangeLabel }}</span>
+        <span style="font-size:23px;font-weight:700;color:var(--color-accent-900);line-height:1.25">{{ d.days }}</span>
+        <sc-if value="{{ d.range }}"><span style="font-size:17px;color:var(--color-accent-900);text-wrap:pretty">{{ d.range }}</span></sc-if>
       </section>
       </div>
       <section data-pdf-home="1" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px;align-items:start">
         <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
-          <h3 style="margin:0;font-size:30px">บ้านพัก</h3>
-          <div style="font-size:24px;text-wrap:pretty">{{ d.address }}</div>
-          <div style="font-size:21px;color:var(--color-neutral-700);overflow-wrap:anywhere">{{ d.locText }}</div>
+          <h3 style="margin:0;font-size:23px">บ้านพัก</h3>
+          <div style="font-size:18px;text-wrap:pretty">{{ d.address }}</div>
+          <div style="font-size:16px;color:var(--color-neutral-700);overflow-wrap:anywhere">{{ d.locText }}</div>
         </div>
         <sc-if value="{{ d.hasLoc }}"><div ref="{{ dmRef }}" data-pdf-map="1" style="width:100%;aspect-ratio:4/3;border-radius:var(--radius-lg);overflow:hidden;background:var(--color-neutral-100)"></div></sc-if>
       </section>
       <section data-pdf-photopage="1" style="display:flex;flex-direction:column;gap:14px">
-        <h3 style="margin:0;font-size:30px">{{ d.photoTitle }}</h3>
-        <sc-if value="{{ d.photoMsg }}"><div style="font-size:22px;color:var(--color-neutral-700)">{{ d.photoMsg }}</div></sc-if>
+        <h3 style="margin:0;font-size:23px">{{ d.photoTitle }}</h3>
+        <sc-if value="{{ d.photoMsg }}"><div style="font-size:17px;color:var(--color-neutral-700)">{{ d.photoMsg }}</div></sc-if>
         <sc-for list="{{ d.dayGroups }}" as="g" hint-placeholder-count="0">
           <section style="display:flex;flex-direction:column;gap:10px;border-top:2px solid var(--color-neutral-200);padding-top:16px">
             <div style="display:flex;gap:10px;align-items:baseline;flex-wrap:wrap">
-              <strong style="font-size:27px;line-height:1.2">{{ g.title }}</strong>
-              <span style="font-size:21px;color:var(--color-neutral-700)">{{ g.count }}</span>
+              <strong style="font-size:21px;line-height:1.2">{{ g.title }}</strong>
+              <span style="font-size:16px;color:var(--color-neutral-700)">{{ g.count }}</span>
               <sc-if value="{{ g.noSelf }}"><span class="tag tag-accent">ไม่มีรูปคู่กับบ้าน</span></sc-if>
             </div>
-            <sc-if value="{{ g.meta }}"><div style="font-size:22px;text-wrap:pretty">{{ g.meta }}</div></sc-if>
+            <sc-if value="{{ g.meta }}"><div style="font-size:17px;text-wrap:pretty">{{ g.meta }}</div></sc-if>
             <div data-pdf-photos="1" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr));gap:14px">
               <sc-for list="{{ g.photos }}" as="p">
                 <figure style="margin:0;display:flex;flex-direction:column;gap:6px;min-width:0">
-                  <div style="aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:var(--color-neutral-100);display:grid;place-items:center"><img src="{{ p.src }}" alt="{{ p.type }}" style="max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain;display:block"></div>
-                  <figcaption style="font-size:20px;line-height:1.35;overflow-wrap:anywhere"><strong>{{ p.type }}</strong> · {{ p.taken }}<sc-if value="{{ p.warn }}"><span style="display:block;color:var(--color-accent-800)">{{ p.warn }}</span></sc-if></figcaption>
+                  <div style="aspect-ratio:3/4;border-radius:var(--radius-md);overflow:hidden;background:var(--color-neutral-100);display:grid;place-items:center"><img src="{{ p.src }}" alt="{{ p.type }}" style="max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain;display:block"></div>
+                  <figcaption style="font-size:15px;line-height:1.35;overflow-wrap:anywhere"><strong>{{ p.type }}</strong> · {{ p.taken }}<sc-if value="{{ p.warn }}"><span style="display:block;color:var(--color-accent-800)">{{ p.warn }}</span></sc-if></figcaption>
                 </figure>
               </sc-for>
             </div>
           </section>
         </sc-for>
       </section>
-      <section style="font-size:19px;color:var(--color-neutral-700);display:flex;flex-direction:column;gap:2px">
+      <section style="font-size:14px;color:var(--color-neutral-700);display:flex;flex-direction:column;gap:2px">
         <span>{{ d.submits }}</span>
         <span>ผู้รวบรวม: ผู้จัดการเขต ________________________ วันที่ ____________</span>
       </section>
@@ -505,20 +506,20 @@ function stamp(file,lines){return new Promise(res=>{const url=URL.createObjectUR
   img.onload=()=>{const sc=Math.min(1,1600/Math.max(img.width,img.height));const w=Math.round(img.width*sc),h=Math.round(img.height*sc);
     const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');g.drawImage(img,0,0,w,h);
     const fs=Math.max(16,Math.round(w/36)),lh=fs*1.35,bh=lh*lines.length+fs*0.9;
-    g.fillStyle='rgba(20,20,20,.62)';g.fillRect(0,h-bh,w,bh);g.fillStyle='#fff';g.font=`600 ${fs}px Sarabun, sans-serif`;g.textBaseline='top';
+    g.fillStyle='rgba(20,20,20,.62)';g.fillRect(0,h-bh,w,bh);g.fillStyle='#fff';g.font=`600 ${fs}px 'IBM Plex Sans Thai', sans-serif`;g.textBaseline='top';
     lines.forEach((l,i)=>g.fillText(l,fs*0.6,h-bh+fs*0.45+i*lh));
     const S=160,tc=document.createElement('canvas');tc.width=S;tc.height=S;const m=Math.min(img.width,img.height);
     tc.getContext('2d').drawImage(img,(img.width-m)/2,(img.height-m)/2,m,m,0,0,S,S);
     URL.revokeObjectURL(url);res({data:c.toDataURL('image/jpeg',0.85),thumb:tc.toDataURL('image/jpeg',0.6)});};
   img.onerror=()=>{URL.revokeObjectURL(url);res(null);};img.src=url;});}
 function mkMap(el){const m=L.map(el,{scrollWheelZoom:false}).setView([14.08,100.63],10);L.tileLayer(TILE,{maxZoom:19,attribution:ATTR}).addTo(m);setTimeout(()=>m.invalidateSize(),250);return m;}
-const brMarker=b=>L.circleMarker([b.lat,b.lng],{radius:7,color:'#201e1d',weight:3,fillColor:'#f5ead8',fillOpacity:1}).bindTooltip(b.code,{permanent:true,direction:'right',offset:[8,0],className:'br-lbl'});
-const homeMarker=(lat,lng)=>L.circleMarker([lat,lng],{radius:10,color:'#8c491a',weight:3,fillColor:'#c67139',fillOpacity:.9});
+const brMarker=b=>L.circleMarker([b.lat,b.lng],{radius:7,color:'#141a21',weight:3,fillColor:'#eef2f5',fillOpacity:1}).bindTooltip(b.code,{permanent:true,direction:'right',offset:[8,0],className:'br-lbl'});
+const homeMarker=(lat,lng)=>L.circleMarker([lat,lng],{radius:10,color:'#923611',weight:3,fillColor:'#c24a12',fillOpacity:.9});
 function thumbIcon(thumb,count,level){const c=LVC[level||'']||LVC[''];
-  const inner=thumb?`<img src="${thumb}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:14px;display:block">`
-    :`<div style="width:100%;height:100%;border-radius:14px;display:grid;place-items:center;color:#fff;font:700 18px Sarabun,sans-serif;text-align:center;line-height:1.1">${esc(level||'ไม่มีรูป')}</div>`;
+  const inner=thumb?`<img src="${thumb}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-md);display:block">`
+    :`<div style="width:100%;height:100%;border-radius:var(--radius-md);display:grid;place-items:center;color:#fff;font:700 18px Sarabun,sans-serif;text-align:center;line-height:1.1">${esc(level||'ไม่มีรูป')}</div>`;
   return L.divIcon({className:'',iconSize:[84,96],iconAnchor:[42,96],popupAnchor:[0,-92],
-    html:`<div style="position:relative;width:84px;height:84px;box-sizing:border-box;border:4px solid ${c};border-radius:19px;background:${c};box-shadow:0 6px 16px rgba(32,30,29,.3)">${inner}${count?`<span style="position:absolute;left:8px;bottom:2px;color:#fff;font:700 26px Sarabun,sans-serif;text-shadow:0 1px 4px rgba(0,0,0,.8)">${count}</span>`:''}<span style="position:absolute;left:50%;bottom:-14px;margin-left:-10px;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:12px solid ${c}"></span></div>`});}
+    html:`<div style="position:relative;width:84px;height:84px;box-sizing:border-box;border:4px solid ${c};border-radius:var(--radius-lg);background:${c};box-shadow:0 6px 16px rgba(32,30,29,.3)">${inner}${count?`<span style="position:absolute;left:8px;bottom:2px;color:#fff;font:700 26px Sarabun,sans-serif;text-shadow:0 1px 4px rgba(0,0,0,.8)">${count}</span>`:''}<span style="position:absolute;left:50%;bottom:-14px;margin-left:-10px;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:12px solid ${c}"></span></div>`});}
 
 class Component extends DCLogic{
   state={view:'form',f:loadForm(),photos:emptyPhotos(),err:{},gpsState:'idle',gpsErr:'',geoDenied:false,sending:false,progress:'',sendErr:'',done:null,sent:loadSent(),mapOpen:false,
@@ -661,11 +662,11 @@ class Component extends DCLogic{
         meta:[m.water_level?'ระดับน้ำ: '+m.water_level:'',m.note?'รายละเอียด: '+m.note:''].filter(Boolean).join(' · '),
         photos:dp.filter(p=>p.data).map(p=>{const tk=p.taken_at?isoOf(new Date(p.taken_at)):'';return {src:p.data,type:TYPEN[p.type]||'อื่นๆ',
           taken:p.taken_at?'ถ่ายเมื่อ '+fmtShort(p.taken_at):'ไม่ทราบเวลาถ่าย',warn:tk&&tk!==day?'วันที่ถ่ายไม่ตรงกับวันของหลักฐาน':''};})};});}
-  popHtml(p,list){const head=`<div style="font-weight:700;font-size:20px">${p.level?'ระดับน้ำ '+esc(p.level):'ไม่ระบุระดับน้ำ'}</div>
-    <div style="font-size:16px;color:#5a534d">ล่าสุด ${p.last_day?esc(fmtDayShort(p.last_day)):'-'} · หลักฐาน ${p.days||0} วัน${p.branch?' · ใกล้สาขา '+esc(BRN[p.branch]||p.branch):''}</div>`;
-    if(!list)return `<div style="width:250px">${head}<div style="margin-top:8px;font-size:16px">กำลังโหลดรูป…</div></div>`;
-    if(!list.length)return `<div style="width:250px">${head}<div style="margin-top:8px;font-size:16px">ยังไม่มีรูประดับน้ำหรือถนน</div></div>`;
-    return `<div style="width:260px">${head}<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:8px">${list.map(t=>`<div style="position:relative"><img src="${t.t}" alt="" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;display:block"><span style="position:absolute;left:4px;bottom:2px;color:#fff;font-size:13px;text-shadow:0 1px 3px #000">${esc(fmtDayShort(t.day))}</span></div>`).join('')}</div></div>`;}
+  popHtml(p,list){const head=`<div style="font-weight:700;font-size:15px">${p.level?'ระดับน้ำ '+esc(p.level):'ไม่ระบุระดับน้ำ'}</div>
+    <div style="font-size:12px;color:#4c5560">ล่าสุด ${p.last_day?esc(fmtDayShort(p.last_day)):'-'} · หลักฐาน ${p.days||0} วัน${p.branch?' · ใกล้สาขา '+esc(BRN[p.branch]||p.branch):''}</div>`;
+    if(!list)return `<div style="width:250px">${head}<div style="margin-top:8px;font-size:12px">กำลังโหลดรูป…</div></div>`;
+    if(!list.length)return `<div style="width:250px">${head}<div style="margin-top:8px;font-size:12px">ยังไม่มีรูประดับน้ำหรือถนน</div></div>`;
+    return `<div style="width:260px">${head}<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:8px">${list.map(t=>`<div style="position:relative"><img src="${t.t}" alt="" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:var(--radius-md);display:block"><span style="position:absolute;left:4px;bottom:2px;color:#fff;font-size:12px;text-shadow:0 1px 3px #000">${esc(fmtDayShort(t.day))}</span></div>`).join('')}</div></div>`;}
   drawMaps(){const s=this.state;
     if(this.fm){const k=JSON.stringify(s.f.loc);if(this.fmKey!==k){this.fmKey=k;this.fmLyr.clearLayers();BR.forEach(b=>brMarker(b).addTo(this.fmLyr));if(s.f.loc)homeMarker(s.f.loc.lat,s.f.loc.lng).bindTooltip('บ้านพัก').addTo(this.fmLyr);}}
     if(this.am){const rows=this.filtered();const k=rows.map(c=>c.employee_id+':'+(c.photo_count||0)).join();if(this.amKey!==k){const first=this.amKey==null;this.amKey=k;this.amLyr.clearLayers();BR.forEach(b=>brMarker(b).addTo(this.amLyr));

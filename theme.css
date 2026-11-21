@@ -1,0 +1,121 @@
+/* ธีม "ชุดกู้ภัย" — โทนหมึกเทาเย็น + ส้มเสื้อชูชีพ (ปุ่ม/เตือน) + ฟ้าน้ำ + เขียวทีล (สำเร็จ)
+   โหลดต่อจาก styles.css ของ design system เดิม เพื่อแทนที่ token และ component ทั้งหมด */
+:root{
+  --color-bg:#eef2f5;
+  --color-surface:#ffffff;
+  --color-text:#141a21;
+  --color-accent:#c24a12;
+  --color-accent-2:#2a8569;
+  --color-divider:rgba(20,26,33,.13);
+  --color-danger:#b42318;
+  --color-danger-100:#fdecea;
+
+  --color-neutral-100:#f4f6f8;
+  --color-neutral-200:#e7ebef;
+  --color-neutral-300:#d3d9df;
+  --color-neutral-400:#aab3bd;
+  --color-neutral-500:#87919c;
+  --color-neutral-600:#66707b;
+  --color-neutral-700:#4c5560;
+  --color-neutral-800:#343b44;
+  --color-neutral-900:#20262d;
+
+  --color-accent-100:#fff3eb;
+  --color-accent-200:#fee0cc;
+  --color-accent-300:#fbbf98;
+  --color-accent-400:#f3965d;
+  --color-accent-500:#dd6a2c;
+  --color-accent-600:#b9450f;
+  --color-accent-700:#923611;
+  --color-accent-800:#6c2a10;
+  --color-accent-900:#46200f;
+
+  --color-accent-2-100:#e8f6f0;
+  --color-accent-2-200:#cdeee0;
+  --color-accent-2-300:#a3dcc6;
+  --color-accent-2-400:#6cc0a3;
+  --color-accent-2-500:#3fa283;
+  --color-accent-2-600:#2a8569;
+  --color-accent-2-700:#1f6a54;
+  --color-accent-2-800:#185241;
+  --color-accent-2-900:#103a2e;
+
+  --water:#3b82b6;
+  --water-700:#1f5a85;
+  --water-100:#e6f1f9;
+
+  --radius-sm:6px;
+  --radius-md:10px;
+  --radius-lg:14px;
+  --radius-pill:10px;
+
+  --shadow-sm:0 1px 2px rgba(16,24,32,.06),0 1px 1px rgba(16,24,32,.04);
+  --shadow-md:0 6px 16px -4px rgba(16,24,32,.14),0 2px 4px rgba(16,24,32,.06);
+  --shadow-lg:0 20px 44px -10px rgba(16,24,32,.28),0 4px 10px rgba(16,24,32,.08);
+}
+
+html{-webkit-text-size-adjust:100%}
+body{text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,h5,h6{letter-spacing:0;line-height:1.25;text-wrap:balance}
+p{text-wrap:pretty}
+a{color:var(--water-700);text-underline-offset:3px}
+a:hover{color:var(--color-text)}
+::selection{background:var(--color-accent-200);color:var(--color-accent-900)}
+:focus-visible{outline:3px solid var(--water);outline-offset:2px;border-radius:4px}
+input,select,textarea,button{font:inherit}
+table,.table,[data-num]{font-variant-numeric:tabular-nums}
+*{scrollbar-color:var(--color-neutral-400) transparent}
+
+/* ปุ่ม */
+.btn{font-weight:600;letter-spacing:0;border-radius:var(--radius-md);min-height:48px;padding:10px 18px;gap:8px;
+  transition:background-color .16s cubic-bezier(.22,1,.36,1),border-color .16s,box-shadow .16s,transform .16s}
+.btn:active:not(:disabled){transform:translateY(1px)}
+.btn:disabled{opacity:.5}
+.btn-primary{background:var(--color-accent);color:#fff;box-shadow:0 1px 0 rgba(0,0,0,.12),inset 0 -2px 0 rgba(0,0,0,.14)}
+.btn-primary:hover{background:var(--color-accent-600)}
+.btn-primary:active{background:var(--color-accent-700)}
+.btn-secondary{background:var(--color-surface);color:var(--color-text);border:1.5px solid var(--color-neutral-300);box-shadow:var(--shadow-sm)}
+.btn-secondary:hover{border-color:var(--color-neutral-500);background:var(--color-neutral-100)}
+.btn-secondary:active{background:var(--color-neutral-200)}
+.btn-ghost{color:var(--water-700);padding-inline:12px}
+.btn-ghost:hover{background:var(--water-100)}
+.btn-ghost:active{background:#d3e6f4}
+.btn-icon{width:44px;height:44px;min-height:44px;padding:0}
+
+/* ฟอร์ม */
+.field{display:flex;flex-direction:column;gap:6px}
+.field>label{margin:0;color:var(--color-neutral-800)}
+.input{background:#fff;border:1.5px solid var(--color-neutral-300);border-radius:var(--radius-md);min-height:48px;padding:10px 14px;
+  caret-color:var(--color-accent);transition:border-color .16s,box-shadow .16s}
+.input::placeholder{color:var(--color-neutral-600)}
+.input:hover{border-color:var(--color-neutral-500)}
+.input:focus,.input:focus-visible{outline:none;border-color:var(--water);box-shadow:0 0 0 3px rgba(59,130,182,.22)}
+.input[aria-invalid="true"]{border-color:var(--color-danger)}
+select.input{appearance:none;-webkit-appearance:none;padding-right:42px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 256 256'%3E%3Cpath fill='none' stroke='%234c5560' stroke-width='24' stroke-linecap='round' stroke-linejoin='round' d='M208 96l-80 80-80-80'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center}
+textarea.input{border-radius:var(--radius-md)!important}
+
+/* การ์ด แท็ก ตาราง */
+.card,.dialog{border-radius:var(--radius-lg)}
+.card{background:var(--color-surface);border:1px solid var(--color-divider);box-shadow:var(--shadow-sm)}
+.btn,.seg,.input{border-radius:var(--radius-md)}
+.tag{border-radius:var(--radius-sm);font-weight:600;padding:3px 10px}
+.tag-accent{background:var(--color-accent-100);color:var(--color-accent-800)}
+.tag-accent-2{background:var(--color-accent-2-100);color:var(--color-accent-2-800)}
+.tag-neutral{background:var(--color-neutral-200);color:var(--color-neutral-800)}
+.tag-outline{border:1.5px solid var(--color-accent-600);color:var(--color-accent-700)}
+.table th{text-transform:none;letter-spacing:0;font-weight:600;color:var(--color-neutral-700);background:var(--color-neutral-100);border-bottom:1px solid var(--color-divider)}
+.table td{border-bottom:1px solid var(--color-neutral-200)}
+.table tbody tr:hover{background:var(--color-neutral-100)}
+.dialog{background:var(--color-surface);box-shadow:var(--shadow-lg)}
+.dialog-backdrop{background:rgba(20,26,33,.55)}
+
+/* แผนที่ */
+.leaflet-container{background:var(--color-neutral-200)}
+.leaflet-tile-pane{filter:saturate(.7) contrast(.96)}
+.leaflet-tooltip{border-radius:var(--radius-sm)!important;box-shadow:var(--shadow-md)!important}
+.leaflet-popup-content-wrapper{border-radius:var(--radius-lg)!important;box-shadow:var(--shadow-lg)!important}
+.leaflet-bar a{color:var(--color-text)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
